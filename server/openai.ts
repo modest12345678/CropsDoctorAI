@@ -38,7 +38,7 @@ export type CropType = "potato" | "tomato" | "corn" | "wheat" | "rice" | "jute" 
 
 const cropDiseaseInfo: Record<CropType, { diseases: string[]; specialization: string }> = {
   potato: {
-    diseases: ["Early Blight", "Late Blight", "Black Scurf", "Common Scab", "Healthy"],
+    diseases: ["Early Blight", "Late Blight", "Black Scurf", "Common Scab", "PLRV (Potato Leafroll Virus)", "PVY (Potato Virus Y)", "Mosaic Virus", "Blackleg", "Healthy"],
     specialization: "potato pathology"
   },
   tomato: {
