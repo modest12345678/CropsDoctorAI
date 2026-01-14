@@ -3,7 +3,6 @@ import { MessageSquare, Send, X, Loader2, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -93,8 +92,9 @@ export function ChatInterface({ isOpen: propIsOpen, onOpenChange, alwaysShowLabe
                         </DialogTitle>
                     </DialogHeader>
 
+
                     <div className="flex-1 flex flex-col overflow-hidden min-h-0">
-                        <ScrollArea className="flex-1 px-6 h-[500px]">
+                        <div className="flex-1 px-6 overflow-y-auto overscroll-contain" style={{ maxHeight: 'calc(90vh - 200px)' }}>
                             <div className="space-y-4 pb-4">
                                 {messages.length === 0 && (
                                     <div className="text-center text-muted-foreground py-12 px-4">
@@ -140,7 +140,7 @@ export function ChatInterface({ isOpen: propIsOpen, onOpenChange, alwaysShowLabe
                                 )}
                                 <div ref={scrollRef} />
                             </div>
-                        </ScrollArea>
+                        </div>
                         <div className="p-6 pt-4 border-t bg-background">
                             <div className="flex gap-2">
                                 <Input
