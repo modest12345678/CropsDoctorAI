@@ -94,7 +94,7 @@ export function ChatInterface({ isOpen: propIsOpen, onOpenChange, alwaysShowLabe
                     </DialogHeader>
 
                     <div className="flex-1 flex flex-col overflow-hidden min-h-0">
-                        <ScrollArea className="flex-1 px-6">
+                        <ScrollArea className="flex-1 px-6 h-[500px]">
                             <div className="space-y-4 pb-4">
                                 {messages.length === 0 && (
                                     <div className="text-center text-muted-foreground py-12 px-4">
