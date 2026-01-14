@@ -65,16 +65,65 @@ export default function DiseaseDetector() {
         },
     });
 
-    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Compress image to reduce payload size
+    const compressImage = async (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Calculate new dimensions (max 1024px on longest side)
+                    const maxDimension = 1024;
+                    if (width > height && width > maxDimension) {
+                        height = (height / width) * maxDimension;
+                        width = maxDimension;
+                    } else if (height > maxDimension) {
+                        width = (width / height) * maxDimension;
+                        height = maxDimension;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) {
+                        reject(new Error('Failed to get canvas context'));
+                        return;
+                    }
+
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convert to JPEG with quality 0.8 to reduce size while maintaining good quality
+                    const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                    resolve(compressedDataUrl);
+                };
+                img.onerror = () => reject(new Error('Failed to load image'));
+                img.src = e.target?.result as string;
+            };
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const imageData = ev.target?.result as string;
-                setSelectedImage(imageData);
+            try {
+                const compressedImage = await compressImage(file);
+                setSelectedImage(compressedImage);
                 setDetectionResult(null);
-            };
-            reader.readAsDataURL(file);
+            } catch (error) {
+                toast({
+                    title: t.errorOccurred,
+                    description: "Failed to process image",
+                    variant: "destructive"
+                });
+                console.error("Image compression error:", error);
+            }
         }
     };
 
