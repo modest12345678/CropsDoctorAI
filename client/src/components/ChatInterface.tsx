@@ -119,7 +119,7 @@ export function ChatInterface({ isOpen: propIsOpen, onOpenChange, alwaysShowLabe
                                             {msg.role === "user" ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
                                         </div>
                                         <div className={cn(
-                                            "rounded-lg p-4 max-w-[75%]",
+                                            "rounded-lg p-4 max-w-[75%] whitespace-pre-wrap",
                                             msg.role === "user"
                                                 ? "bg-primary text-primary-foreground"
                                                 : "bg-muted"
