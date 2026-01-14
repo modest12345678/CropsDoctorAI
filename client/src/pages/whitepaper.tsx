@@ -21,7 +21,7 @@ export default function Whitepaper() {
                 {
                     title: "2. Comprehensive Tool Deep-Dive",
                     icon: Code,
-                    text: "Our ecosystem consists of six specialized modules. Below is a detailed technical and operational breakdown of each.",
+                    text: "Our ecosystem consists of seven specialized modules. Below is a detailed technical and operational breakdown of each.",
                     subsections: [
                         {
                             title: "A. AI Disease Detector (Computer Vision)",
@@ -44,7 +44,11 @@ export default function Whitepaper() {
                             text: "• Technical Core: Connects to global meteorological APIs (e.g., OpenWeatherMap) to provide micro-climate data. It monitors parameters like precipitation probability, wind speed, and humidity.\n• Operational Workflow: Automatically detects user location -> Displays 5-day forecast -> Triggers alerts for extreme events (Cyclones, Droughts).\n• Agricultural Impact: Enables 'Climate-Smart Agriculture'. Farmers can synchronize activities (e.g., spraying pesticides only when wind speed is low, harvesting before rain) to maximize efficiency."
                         },
                         {
-                            title: "F. Farm-to-Fork Traceability",
+                            title: "F. Pesticide Calculator (Smart Dosing System)",
+                            text: "• Technical Core: An intelligent algorithm that calculates precise pesticide application rates based on crop type, pest severity, land area, and application method. It incorporates safety margins and conversion factors for different formulations (EC, WP, SC).\n• Operational Workflow: Farmer selects target crop and pest -> Inputs infestation level and land area -> System calculates exact pesticide quantity in ml/L or kg/ha -> Provides mixing instructions and safety precautions -> Displays optimal spraying time based on weather conditions.\n• Agricultural Impact: Prevents pesticide overdosing which leads to chemical residues in food and environmental contamination. Proper dosing saves farmers 15-25% on pesticide costs while maintaining efficacy. Reduces human and pollinator toxicity risks."
+                        },
+                        {
+                            title: "G. Farm-to-Fork Traceability",
                             text: "• Technical Core: A distributed ledger-style database that records immutable 'events' in a crop's lifecycle. It generates a unique cryptographic hash for each harvest batch, encoded into a QR code.\n• Operational Workflow: Farmer logs 'Sowing' with date -> Logs 'Fertilizing' with inputs used -> Logs 'Harvest' with yield -> System generates QR code -> Consumer scans to see the timeline.\n• Agricultural Impact: Ensures 'Food Safety & Compliance'. It opens export markets (e.g., Europe/USA) where traceability is mandatory, allowing farmers to earn a premium of 20-30%."
                         }
                     ]
@@ -76,7 +80,7 @@ export default function Whitepaper() {
                     subsections: [
                         {
                             title: "Lead Developer",
-                            text: "Name: Madesh Chakma\nEducation: B.Sc in Agricultural Engineering, Hajee Mohammad Danesh Science and Technology University (HSTU)\nRole: CEO & AI Architect\nFocus: Bridging the gap between Silicon Valley tech and rural Bangladesh. Expert in Full-Stack Development (React/Node), Geospatial Analysis, and AI Model Deployment."
+                            text: "Name: Madesh Chakma\nEducation: B.Sc in Agricultural Engineering, Hajee Mohammad Danesh Science and Technology University (HSTU)\nRole: CEO & AI Architect\nFocus: Bridging the gap between advanced technology and rural Bangladesh. Expertise in Agricultural Systems Engineering, Precision Agriculture, Geospatial Analysis, and AI-driven Agricultural Solutions."
                         },
                         {
                             title: "Development Philosophy",
@@ -117,7 +121,7 @@ export default function Whitepaper() {
                 {
                     title: "২. টুলস এবং প্রযুক্তির বিস্তারিত বিবরণ",
                     icon: Code,
-                    text: "আমাদের ইকোসিস্টেমে ৬টি বিশেষায়িত মডিউল রয়েছে। নিচে প্রতিটির কারিগরি ও ব্যবহারিক বিবরণ দেওয়া হলো।",
+                    text: "আমাদের ইকোসিস্টেমে ৭টি বিশেষায়িত মডিউল রয়েছে। নিচে প্রতিটির কারিগরি ও ব্যবহারিক বিবরণ দেওয়া হলো।",
                     subsections: [
                         {
                             title: "ক. এআই রোগ শনাক্তকারী (Computer Vision)",
@@ -140,7 +144,11 @@ export default function Whitepaper() {
                             text: "• প্রযুক্তি: গ্লোবাল মেটিওরোলজিক্যাল এপিআই এর সাথে সংযুক্ত হয়ে এটি সুনির্দিষ্ট এলাকার মাইক্রো-ক্লাইমেট ডাটা প্রদান করে।\n• ব্যবহার প্রক্রিয়া: স্বয়ংক্রিয়ভাবে অবস্থান শনাক্ত করে -> আগামী ৫ দিনের বৃষ্টি, রোদ ও আর্দ্রতার তথ্য দেয় -> দুর্যোগের আগাম সতর্কবার্তা দেয়।\n• কৃষিতে প্রভাব: এটি 'জলবায়ু-স্মার্ট কৃষি' বা Climate-Smart Agriculture নিশ্চিত করে। বৃষ্টির আগে সার বা ওষুধ না দিয়ে কৃষক অপচয় রোধ করতে পারেন।"
                         },
                         {
-                            title: "চ. ফার্ম-টু-ফর্ক ট্রেসেবিলিটি (Traceability)",
+                            title: "চ. পেস্টিসাইড ক্যালকুলেটর (Smart Dosing System)",
+                            text: "• প্রযুক্তি: একটি বুদ্ধিমান অ্যালগরিদম যা ফসলের ধরন, পোকার তীব্রতা, জমির আকার এবং প্রয়োগ পদ্ধতির ভিত্তিতে সঠিক কীটনাশক পরিমাণ হিসাব করে। এটি বিভিন্ন ফর্মুলেশন (EC, WP, SC) এর জন্য রূপান্তর করতে পারে।\n• ব্যবহার প্রক্রিয়া: কৃষক ফসল ও পোকা নির্বাচন করেন -> আক্রমণের মাত্রা ও জমির পরিমাণ দেন -> সিস্টেম সঠিক কীটনাশক পরিমাণ ml/L বা kg/ha তে দেয় -> মিশ্রণ নির্দেশনা ও নিরাপত্তা সতর্কতা প্রদান করে -> আবহাওয়ার ভিত্তিতে সর্বোত্তম স্প্রে সময় বলে দেয়।\n• কৃষিতে প্রভাব: কীটনাশকের অতিরিক্ত প্রয়োগ রোধ করে যা খাদ্যে রাসায়নিক অবশিষ্টাংশ এবং পরিবেশ দূষণের কারণ। সঠিক মাত্রা কৃষকের কীটনাশক খরচ ১৫-২৫% সাশ্রয় করে এবং কার্যকারিতা বজায় রাখে। মানুষ ও পরাগায়নকারী পোকার বিষক্রিয়া ঝুঁকি কমায়।"
+                        },
+                        {
+                            title: "ছ. ফার্ম-টু-ফর্ক ট্রেসেবিলিটি (Traceability)",
                             text: "• প্রযুক্তি: একটি ডিজিটাল লেজার যা ফসলের জীবনের প্রতিটি ধাপ রেকর্ড করে। প্রতিটি ব্যাচের জন্য এটি একটি স্বতন্ত্র কিউআর কোড তৈরি করে।\n• ব্যবহার প্রক্রিয়া: বীজ রোপণ, সার প্রয়োগ, সেচ এবং ফসল কাটার তারিখ ও ছবি আপলোড করা হয় -> সিস্টেম কিউআর কোড তৈরি করে -> ভোক্তা স্ক্যান করে পুরো ইতিহাস দেখেন।\n• কৃষিতে প্রভাব: এটি খাদ্য নিরাপত্তা ও স্বচ্ছতা নিশ্চিত করে। রপ্তানি বাজারে প্রবেশের সুযোগ তৈরি করে, যা কৃষকের আয় ২০-৩০% বাড়াতে পারে।"
                         }
                     ]
@@ -172,7 +180,7 @@ export default function Whitepaper() {
                     subsections: [
                         {
                             title: "প্রধান ডেভেলপার",
-                            text: "নাম: মডেশ চাকমা\nশিক্ষা: বি.এসসি ইন এগ্রিকালচারাল ইঞ্জিনিয়ারিং, হাজী মোহাম্মদ দানেশ বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয় (HSTU)\nভূমিকা: সিইও (CEO) এবং এআই আর্কিটেক্ট\nফোকাস: সিলিকন ভ্যালির প্রযুক্তি এবং গ্রামীণ বাংলাদেশের মধ্যে সেতুবন্ধন তৈরি করা। ফুল-স্ট্যাক ডেভেলপমেন্ট এবং জিওস্পেশিয়াল এনালাইসিসে দক্ষ।"
+                            text: "নাম: মডেশ চাকমা\nশিক্ষা: বি.এসসি ইন এগ্রিকালচারাল ইঞ্জিনিয়ারিং, হাজী মোহাম্মদ দানেশ বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয় (HSTU)\nভূমিকা: সিইও (CEO) এবং এআই আর্কিটেক্ট\nফোকাস: উন্নত প্রযুক্তি এবং গ্রামীণ বাংলাদেশের মধ্যে সেতুবন্ধন তৈরি করা। কৃষি সিস্টেম ইঞ্জিনিয়ারিং, নিখুঁত কৃষি, জিওস্পেশিয়াল এনালাইসিস এবং এআই-চালিত কৃষি সমাধানে দক্ষ।"
                         },
                         {
                             title: "উন্নয়ন দর্শন",
