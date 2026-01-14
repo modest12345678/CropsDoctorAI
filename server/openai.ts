@@ -46,79 +46,79 @@ const cropDiseaseInfo: Record<CropType, { diseases: string[]; specialization: st
     specialization: "tomato diseases"
   },
   corn: {
-    diseases: ["Common Rust", "Gray Leaf Spot", "Northern Leaf Blight", "Healthy"],
+    diseases: ["Common Rust", "Gray Leaf Spot", "Northern Leaf Blight", "Southern Leaf Blight", "Maize Dwarf Mosaic Virus", "Sugarcane Mosaic Virus", "Corn Smut", "Healthy"],
     specialization: "corn pathology"
   },
   wheat: {
-    diseases: ["Leaf Rust", "Powdery Mildew", "Septoria", "Stripe Rust", "Healthy"],
+    diseases: ["Leaf Rust", "Powdery Mildew", "Septoria", "Stripe Rust", "Stem Rust", "Wheat Streak Mosaic Virus", "Barley Yellow Dwarf Virus", "Fusarium Head Blight", "Healthy"],
     specialization: "cereal crop diseases"
   },
   rice: {
-    diseases: ["Bacterial Leaf Blight", "Brown Spot", "Leaf Smut", "Blast", "Tungro", "Healthy"],
+    diseases: ["Bacterial Leaf Blight", "Brown Spot", "Leaf Smut", "Blast", "Tungro", "Rice Yellow Mottle Virus", "Grassy Stunt Virus", "Sheath Blight", "Healthy"],
     specialization: "rice pathology"
   },
   jute: {
-    diseases: ["Stem Rot", "Anthracnose", "Black Band", "Mosaic", "Healthy"],
+    diseases: ["Stem Rot", "Anthracnose", "Black Band", "Mosaic Virus", "Yellow Mosaic Virus", "Root Rot", "Collar Rot", "Healthy"],
     specialization: "fiber crop diseases"
   },
   sugarcane: {
-    diseases: ["Red Rot", "Smut", "Wilt", "Grassy Shoot", "Healthy"],
+    diseases: ["Red Rot", "Smut", "Wilt", "Grassy Shoot", "Mosaic Virus", "Yellow Leaf Virus", "Rust", "Leaf Scald", "Healthy"],
     specialization: "sugarcane pathology"
   },
   tea: {
-    diseases: ["Blister Blight", "Red Rust", "Grey Blight", "Black Rot", "Healthy"],
+    diseases: ["Blister Blight", "Red Rust", "Grey Blight", "Black Rot", "Brown Blight", "Die Back", "Root Rot", "Healthy"],
     specialization: "tea plantation diseases"
   },
   mustard: {
-    diseases: ["Alternaria Blight", "White Rust", "Downy Mildew", "Powdery Mildew", "Healthy"],
+    diseases: ["Alternaria Blight", "White Rust", "Downy Mildew", "Powdery Mildew", "Sclerotinia Rot", "Mosaic Virus", "Black Spot", "Healthy"],
     specialization: "oilseed crop diseases"
   },
   mango: {
-    diseases: ["Anthracnose", "Powdery Mildew", "Die Back", "Phoma Blight", "Healthy"],
+    diseases: ["Anthracnose", "Powdery Mildew", "Die Back", "Phoma Blight", "Mango Malformation", "Bacterial Canker", "Sooty Mold", "Healthy"],
     specialization: "fruit tree pathology"
   },
   banana: {
-    diseases: ["Panama Wilt", "Sigatoka", "Bunchy Top", "Anthracnose", "Healthy"],
+    diseases: ["Panama Wilt", "Sigatoka", "Bunchy Top Virus", "Anthracnose", "Banana Streak Virus", "Banana Mosaic Virus", "Moko Disease", "Healthy"],
     specialization: "banana diseases"
   },
   brinjal: {
-    diseases: ["Phomopsis Blight", "Little Leaf", "Fruit Rot", "Wilt", "Healthy"],
+    diseases: ["Phomopsis Blight", "Little Leaf", "Fruit Rot", "Wilt", "Bacterial Wilt", "Mosaic Virus", "Leaf Spot", "Healthy"],
     specialization: "vegetable pathology"
   },
   chili: {
-    diseases: ["Anthracnose", "Leaf Curl", "Powdery Mildew", "Wilt", "Healthy"],
+    diseases: ["Anthracnose", "Leaf Curl Virus", "Powdery Mildew", "Wilt", "Chili Veinal Mottle Virus", "Tobacco Mosaic Virus", "Bacterial Spot", "Healthy"],
     specialization: "spice crop diseases"
   },
   onion: {
-    diseases: ["Purple Blotch", "Downy Mildew", "Smut", "Neck Rot", "Healthy"],
+    diseases: ["Purple Blotch", "Downy Mildew", "Smut", "Neck Rot", "Basal Rot", "Stemphylium Blight", "Pink Root", "Healthy"],
     specialization: "bulb crop diseases"
   },
   garlic: {
-    diseases: ["Purple Blotch", "Downy Mildew", "White Rot", "Rust", "Healthy"],
+    diseases: ["Purple Blotch", "Downy Mildew", "White Rot", "Rust", "Fusarium Basal Rot", "Penicillium Decay", "Mosaic Virus", "Healthy"],
     specialization: "bulb crop diseases"
   },
   ginger: {
-    diseases: ["Soft Rot", "Leaf Spot", "Bacterial Wilt", "Yellows", "Healthy"],
+    diseases: ["Soft Rot", "Leaf Spot", "Bacterial Wilt", "Yellows", "Rhizome Rot", "Phyllosticta Leaf Spot", "Mosaic Virus", "Healthy"],
     specialization: "rhizome diseases"
   },
   turmeric: {
-    diseases: ["Leaf Spot", "Leaf Blotch", "Rhizome Rot", "Taphrina Leaf Spot", "Healthy"],
+    diseases: ["Leaf Spot", "Leaf Blotch", "Rhizome Rot", "Taphrina Leaf Spot", "Scale Rot", "Dry Rot", "Mosaic Virus", "Healthy"],
     specialization: "rhizome diseases"
   },
   lentil: {
-    diseases: ["Wilt", "Rust", "Blight", "Root Rot", "Healthy"],
+    diseases: ["Wilt", "Rust", "Blight", "Root Rot", "Ascochyta Blight", "Stemphylium Blight", "Mosaic Virus", "Healthy"],
     specialization: "pulse crop diseases"
   },
   watermelon: {
-    diseases: ["Anthracnose", "Downy Mildew", "Powdery Mildew", "Fusarium Wilt", "Healthy"],
+    diseases: ["Anthracnose", "Downy Mildew", "Powdery Mildew", "Fusarium Wilt", "Cucumber Mosaic Virus", "Watermelon Mosaic Virus", "Zucchini Yellow Mosaic Virus", "Gummy Stem Blight", "Healthy"],
     specialization: "cucurbit diseases"
   },
   papaya: {
-    diseases: ["Leaf Curl", "Ring Spot", "Anthracnose", "Powdery Mildew", "Healthy"],
+    diseases: ["Leaf Curl", "Ring Spot Virus", "Anthracnose", "Powdery Mildew", "Papaya Mosaic Virus", "Phytophthora Blight", "Damping Off", "Healthy"],
     specialization: "fruit pathology"
   },
   pineapple: {
-    diseases: ["Heart Rot", "Mealybug Wilt", "Fruitlet Core Rot", "Black Rot", "Healthy"],
+    diseases: ["Heart Rot", "Mealybug Wilt", "Fruitlet Core Rot", "Black Rot", "Pink Disease", "Root Rot", "Leaf Spot", "Healthy"],
     specialization: "tropical fruit diseases"
   }
 };
