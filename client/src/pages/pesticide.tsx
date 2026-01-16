@@ -109,6 +109,7 @@ export default function Pesticide() {
     });
 
     const handleCalculate = () => {
+        // Validation: Check if crop and area are selected
         if (!crop || !area) {
             toast({
                 title: t.errorTitle,
@@ -119,10 +120,36 @@ export default function Pesticide() {
         }
 
         const areaNum = parseFloat(area);
+
+        // Validation: Check if area is a valid number
         if (isNaN(areaNum) || areaNum <= 0) {
             toast({
                 title: t.errorTitle,
                 description: t.validAreaError,
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Validation: Check for unrealistically large areas (prevent errors)
+        if (areaNum > 1000) {
+            toast({
+                title: t.errorTitle,
+                description: language === "bn"
+                    ? "এলাকা খুব বড়! দয়া করে ১০০০ একরের নিচে লিখুন।"
+                    : "Area too large! Please enter less than 1000 acres.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Validation: Check for very small areas that might be typos
+        if (areaNum < 0.01) {
+            toast({
+                title: t.errorTitle,
+                description: language === "bn"
+                    ? "এলাকা খুব ছোট! অনুগ্রহ করে সঠিক পরিমাপ লিখুন।"
+                    : "Area too small! Please enter valid measurement.",
                 variant: "destructive",
             });
             return;

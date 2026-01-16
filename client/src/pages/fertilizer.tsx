@@ -87,10 +87,35 @@ export default function Fertilizer() {
         const areaInEnglish = toEnglishNumber(area);
         const areaNumber = parseFloat(areaInEnglish);
 
+        // Validation: Check if area is a valid number
         if (isNaN(areaNumber) || areaNumber <= 0) {
             toast({
                 title: t.calculationFailed,
                 description: t.validAreaError,
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Validation: Check for unrealistically large areas (prevent errors)
+        if (areaNumber > 1000) {
+            toast({
+                title: t.calculationFailed,
+                description: language === "bn"
+                    ? "এলাকা খুব বড়! দয়া করে ১০০০ একরের নিচে লিখুন।"
+                    : "Area too large! Please enter less than 1000 acres.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        // Validation: Check for very small areas that might be typos
+        if (areaNumber < 0.01) {
+            toast({
+                title: t.calculationFailed,
+                description: language === "bn"
+                    ? "এলাকা খুব ছোট! অনুগ্রহ করে সঠিক পরিমাপ লিখুন।"
+                    : "Area too small! Please enter valid measurement.",
                 variant: "destructive",
             });
             return;
