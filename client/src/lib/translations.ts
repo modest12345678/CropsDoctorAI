@@ -222,6 +222,14 @@ export const translations = {
     readyToAnalyze: "Ready to Analyze",
     readyToAnalyzeDesc: "Select your crop and upload an image to see the diagnosis here.",
 
+    // Image Quality Guidance
+    photoTips: "Tips for Best Results",
+    photoTip1: "📸 Good lighting - Take photo in bright natural light",
+    photoTip2: "🔍 Close-up - Focus on the affected leaf/area",
+    photoTip3: "✨ Clear focus - Ensure the image is not blurry",
+    photoTip4: "🌿 Fill frame - Make sure the plant fills most of the photo",
+    imageQualityTips: "For accurate detection:",
+
     // Chat
     chatWelcome: "Hello! I'm your agricultural assistant. Ask me anything about crops or farming.",
     chatPlaceholder: "Type your question...",
@@ -454,6 +462,14 @@ export const translations = {
     validAreaError: "অনুগ্রহ করে একটি বৈধ এলাকা লিখুন",
     readyToAnalyze: "বিশ্লেষণের জন্য প্রস্তুত",
     readyToAnalyzeDesc: "রোগ নির্ণয় দেখতে আপনার ফসল নির্বাচন করুন এবং একটি ছবি আপলোড করুন।",
+
+    // Image Quality Guidance  
+    photoTips: "ভালো ফলাফলের জন্য টিপস",
+    photoTip1: "📸 ভালো আলো - প্রাকৃতিক আলোতে ছবি তুলুন",
+    photoTip2: "🔍 কাছ থেকে - আক্রান্ত পাতা/অংশের কাছ থেকে তুলুন",
+    photoTip3: "✨ স্পষ্ট ফোকাস - ছবি ঝাপসা না হয় তা নিশ্চিত করুন",
+    photoTip4: "🌿 ফ্রেম পূর্ণ করুন - গাছ যেন ছবির বেশিরভাগ অংশ দখল করে",
+    imageQualityTips: "সঠিক সনাক্তকরণের জন্য:",
 
     // Chat
     chatWelcome: "হ্যালো! আমি আপনার কৃষি সহকারী। ফসল বা চাষাবাদ সম্পর্কে আমাকে কিছু জিজ্ঞাসা করুন।",

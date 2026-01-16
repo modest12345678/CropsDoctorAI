@@ -214,6 +214,33 @@ export default function DiseaseDetector() {
                                     </div>
                                     <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
                                     <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFileSelect} />
+
+                                    {/* Photo Tips Card */}
+                                    <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+                                        <CardContent className="pt-4 pb-3 px-4">
+                                            <h4 className="text-sm font-semibold text-primary mb-2 flex items-center gap-2">
+                                                💡 {t.photoTips}
+                                            </h4>
+                                            <ul className="text-xs text-muted-foreground space-y-1.5">
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-primary">•</span>
+                                                    <span>{t.photoTip1}</span>
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-primary">•</span>
+                                                    <span>{t.photoTip2}</span>
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-primary">•</span>
+                                                    <span>{t.photoTip3}</span>
+                                                </li>
+                                                <li className="flex items-start gap-2">
+                                                    <span className="text-primary">•</span>
+                                                    <span>{t.photoTip4}</span>
+                                                </li>
+                                            </ul>
+                                        </CardContent>
+                                    </Card>
                                 </div>
                             ) : (
                                 <div className="space-y-4">

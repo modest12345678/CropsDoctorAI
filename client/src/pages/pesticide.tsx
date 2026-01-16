@@ -27,6 +27,7 @@ interface PesticideRecommendation {
         waterRequired?: string; // Legacy/Optional
         numberOfTanks?: string; // Legacy/Optional
     };
+    safetyPrecautions?: string[]; // Optional field to prevent crashes
 }
 
 
@@ -66,7 +67,30 @@ export default function Pesticide() {
 
     const calculateMutation = useMutation({
         mutationFn: async (data: { cropType: string; area: number; unit: string; language: string }) => {
-            return apiRequest<PesticideRecommendation>("POST", "/api/pesticide", data);
+            try {
+                const response = await apiRequest<PesticideRecommendation>("POST", "/api/pesticide", data);
+                console.log("Pesticide API Response:", response); // Debug log
+
+                // Validate response
+                if (!response || typeof response !== 'object') {
+                    throw new Error("Invalid response from server");
+                }
+
+                // Ensure recommendations is an array
+                if (!Array.isArray(response.recommendations)) {
+                    response.recommendations = [];
+                }
+
+                // Ensure calibration exists
+                if (!response.calibration) {
+                    response.calibration = { dosePerTank: "N/A" };
+                }
+
+                return response;
+            } catch (error) {
+                console.error("Pesticide API Error:", error);
+                throw error;
+            }
         },
         onSuccess: (data) => {
             toast({
@@ -74,10 +98,11 @@ export default function Pesticide() {
                 description: t.whyNecessary,
             });
         },
-        onError: (error) => {
+        onError: (error: any) => {
+            console.error("Pesticide calculation failed:", error);
             toast({
                 title: t.errorTitle,
-                description: error.message,
+                description: error?.message || "Failed to calculate pesticide recommendations",
                 variant: "destructive",
             });
         },
@@ -221,11 +246,13 @@ export default function Pesticide() {
                                 </CardHeader>
                                 <CardContent>
                                     <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-                                        <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100 flex flex-col items-center text-center min-w-[200px] max-w-sm">
-                                            <span className="text-sm text-muted-foreground mb-2 font-medium uppercase tracking-wide">{t.dosePerTank}</span>
-                                            <span className="text-base font-bold text-blue-700 leading-snug">{calculateMutation.data?.calibration?.dosePerTank || "N/A"}</span>
-                                            <span className="text-xs text-blue-400 mt-2">(16L Sprayer)</span>
-                                        </div>
+                                        {calculateMutation.data?.calibration?.dosePerTank && (
+                                            <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100 flex flex-col items-center text-center min-w-[200px] max-w-sm">
+                                                <span className="text-sm text-muted-foreground mb-2 font-medium uppercase tracking-wide">{t.dosePerTank}</span>
+                                                <span className="text-base font-bold text-blue-700 leading-snug">{calculateMutation.data.calibration.dosePerTank}</span>
+                                                <span className="text-xs text-blue-400 mt-2">(16L Sprayer)</span>
+                                            </div>
+                                        )}
                                         {calculateMutation.data?.calibration?.totalPesticide && (
                                             <div className="bg-white p-6 rounded-xl shadow-sm border border-blue-100 flex flex-col items-center text-center min-w-[200px] max-w-sm">
                                                 <span className="text-sm text-muted-foreground mb-2 font-medium uppercase tracking-wide">Total Needed</span>

@@ -148,27 +148,54 @@ A farmer has uploaded an image of their ${cropType} plant and suspects it may ha
 Common ${cropType} diseases include:
 ${diseaseList}
 
-Based on your expertise and the image provided, provide a general analysis for ${cropType} plants in JSON format.
-Ensure your response is valid JSON only, without markdown code blocks.
+**CRITICAL ANALYSIS INSTRUCTIONS:**
 
+1. **If the plant appears HEALTHY** (vibrant green, no visible lesions, normal growth):
+   - Return diseaseName: "Healthy" or "No Disease Detected"
+   - Set confidence: 85-95
+   - Description: "Your ${cropType} plant appears healthy with no visible disease symptoms!"
+   - Symptoms: "No disease symptoms observed. Plant shows normal, healthy growth."
+   - Treatment: Provide PREVENTIVE care tips (proper watering, nutrition, monitoring)
+
+2. **If the image is POOR QUALITY** (blurry, too dark, plant not clearly visible):
+   - Return diseaseName: "Image Quality Issue"
+   - Set confidence: 20-40
+   - Description: "Cannot analyze reliably - image quality is insufficient for accurate diagnosis"
+   - Symptoms: "Image too blurry/dark to detect symptoms clearly"
+   - Treatment: ["Please retake photo with: bright natural lighting, close-up of affected area, clear focus, plant filling most of frame"]
+
+3. **If UNCERTAIN** (symptoms not matching known diseases clearly):
+   - Return best guess OR "Unknown Disease"
+   - Set confidence: 30-60 (reflect actual uncertainty)
+   - Description: "AI is uncertain. Please consult an agricultural expert for confirmation."
+   - Include disclaimer about need for professional verification
+
+4. **ONLY if symptoms are CLEAR and CONFIDENT**:
+   - Return specific disease name
+   - Set confidence: 70-95 (based on symptom clarity)
+   - Provide detailed symptoms and treatment steps
+
+**Response Format (JSON only, no markdown):**
 {
-  "diseaseName": "Most common disease for ${cropType} or 'Healthy'",
-  "confidence": 70,
-  "description": "Brief, simple description of the issue.",
-  "symptoms": "Key visible symptoms to look for.",
+  "diseaseName": "Specific disease name OR 'Healthy' OR 'Image Quality Issue' OR 'Unknown Disease'",
+  "confidence": 20-95,
+  "description": "Brief, honest, farmer-friendly description",
+  "symptoms": "Key visible symptoms OR 'No symptoms' OR 'Cannot see clearly'",
   "treatment": [
-    "Step 1: Preparation - Remove infected parts...",
+    "Step 1: Preparation - ...",
     "Step 2: Medicine Selection - Use [Product Name]...",
-    "Step 3: How to Apply - Mix Xg in Y liters of water. Spray thoroughly on...",
-    "Step 4: Schedule - Apply every 7 days for..."
+    "Step 3: How to Apply - Mix Xg in Y liters of water. Spray thoroughly...",
+    "Step 4: Schedule - Apply every 7 days..."
   ]
 }
 
-IMPORTANT:
-- Be very descriptive, fluent, and farmer-friendly.
-- EXPLICITLY explain "How to Apply" (Application Method) as a distinct step.
-- Return 'treatment' as an ARRAY of strings, where each string is a detailed paragraph/step.
-- Ensure the language is natural and easy for a farmer to understand.`;
+**IMPORTANT RULES:**
+- Be HONEST about uncertainty - don't force diagnoses
+- DON'T diagnose disease on obviously healthy plants
+- DON'T guess wildly on unclear/blurry images
+- Confidence should reflect ACTUAL certainty, not optimism
+- Treatment must be ARRAY of detailed, farmer-friendly steps
+- Use natural, encouraging language`;
 
     // Process base64 image
     let imageUrl = base64Image;

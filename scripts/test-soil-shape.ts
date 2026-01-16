@@ -8,7 +8,7 @@ async function test() {
         const lng = 88.660378;
         const data = await getSoilData(lat, lng);
         console.log("Keys received:", Object.keys(data));
-        console.log("Recommended Crops:", data.recommendedCrops);
+        console.log("Deficiencies:", data.deficiencies);
     } catch (error) {
         console.error("Test Failed:", error);
     }
