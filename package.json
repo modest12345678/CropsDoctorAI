@@ -5,9 +5,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "cross-env NODE_ENV=development tsx server/index.ts",
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm run build:client && npm run build:server && npm run postbuild",
     "build:client": "vite build --emptyOutDir",
     "build:server": "tsc -p tsconfig.server.json",
+    "postbuild": "node -e \"require('fs').copyFileSync('client/public/sitemap.xml', 'dist/client/sitemap.xml'); require('fs').copyFileSync('client/public/robots.txt', 'dist/client/robots.txt');\"",
     "start": "cross-env NODE_ENV=production node dist/server/index.js",
     "db:push": "drizzle-kit push",
     "check": "tsc"
