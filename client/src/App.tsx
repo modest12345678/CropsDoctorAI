@@ -173,6 +173,10 @@ function Footer() {
 }
 
 import Whitepaper from "@/pages/whitepaper";
+import DownloadPage from "@/pages/download";
+import AndroidDownloadPage from "@/pages/download-android";
+import PWADownloadPage from "@/pages/download-pwa";
+import AppFeaturesPage from "@/pages/app-features";
 
 function Router() {
   return (
@@ -189,6 +193,10 @@ function Router() {
       <Route path="/soil-fertility" component={SoilFertility} />
       <Route path="/weather" component={WeatherForecast} />
       <Route path="/pesticide" component={Pesticide} />
+      <Route path="/download" component={DownloadPage} />
+      <Route path="/download/android" component={AndroidDownloadPage} />
+      <Route path="/download/pwa" component={PWADownloadPage} />
+      <Route path="/app-features" component={AppFeaturesPage} />
       <Route component={NotFound} />
     </Switch>
   );
