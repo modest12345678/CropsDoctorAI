@@ -7,7 +7,7 @@ import { Download, Smartphone, Check, ExternalLink, Apple, Chrome } from 'lucide
 import { Capacitor } from '@capacitor/core';
 
 // APK download URL - Hosted on Google Drive (keeps source code private)
-const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=14XXDEWI51DK93GHAu6I3a75vtgKrGWAv';
+const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=14XXDEWI51DK93GHAu6I3a75vtgKrGWAv&confirm=t';
 
 export function AppDownload() {
     const { language } = useLanguage();
