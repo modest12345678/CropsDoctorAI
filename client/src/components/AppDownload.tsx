@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Download, Smartphone, Check, ExternalLink, Apple, Chrome } from 'lucide-react';
+import { Capacitor } from '@capacitor/core';
 
 // APK download URL - Update this with your actual APK hosting URL
 const APK_DOWNLOAD_URL = 'https://github.com/modest12345678/CropsDoctorAI/releases/latest/download/crop-doctor.apk';
@@ -12,6 +13,14 @@ export function AppDownload() {
     const { language } = useLanguage();
     const { canInstall, isInstalled, installPWA } = usePWAInstall();
     const [installing, setInstalling] = useState(false);
+
+    // Don't show download section if running inside native app
+    const isNativeApp = Capacitor.isNativePlatform();
+
+    // Return null if running in native app - no need for download option
+    if (isNativeApp) {
+        return null;
+    }
 
     const t = {
         title: language === 'bn' ? 'অ্যাপ ডাউনলোড করুন' : 'Download App',
