@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useLanguage } from "@/lib/LanguageContext";
 import { FloatingActions } from "@/components/FloatingActions";
+import { AppDownload } from "@/components/AppDownload";
 import { Calendar, Bot, ChevronRight, MapPin, CloudRain, Bug } from "lucide-react";
 import { useState } from "react";
 
@@ -175,6 +176,11 @@ export default function Home() {
             </CardHeader>
           </Card>
         </div>
+      </div>
+
+      {/* App Download Section */}
+      <div className="max-w-md mx-auto pb-16 px-4">
+        <AppDownload />
       </div>
 
       <FloatingActions
