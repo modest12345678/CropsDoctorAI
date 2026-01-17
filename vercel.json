@@ -11,11 +11,19 @@
             }
         },
         {
-            "src": "api/index.ts",
+            "src": "api/**/*.ts",
             "use": "@vercel/node"
         }
     ],
     "routes": [
+        {
+            "src": "/sitemap.xml",
+            "dest": "/api/sitemap.xml.ts"
+        },
+        {
+            "src": "/robots.txt",
+            "dest": "/api/robots.txt.ts"
+        },
         {
             "src": "/api/(.*)",
             "dest": "/api/index.ts",
@@ -24,30 +32,6 @@
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
                 "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-            }
-        },
-        {
-            "src": "/sitemap.xml",
-            "dest": "/sitemap.xml",
-            "headers": {
-                "Content-Type": "application/xml; charset=utf-8",
-                "Cache-Control": "public, max-age=3600, s-maxage=3600"
-            }
-        },
-        {
-            "src": "/robots.txt",
-            "dest": "/robots.txt",
-            "headers": {
-                "Content-Type": "text/plain; charset=utf-8",
-                "Cache-Control": "public, max-age=3600, s-maxage=3600"
-            }
-        },
-        {
-            "src": "/CropsDoctorAI-release.apk",
-            "dest": "/CropsDoctorAI-release.apk",
-            "headers": {
-                "Content-Type": "application/vnd.android.package-archive",
-                "Cache-Control": "public, max-age=3600"
             }
         },
         {
