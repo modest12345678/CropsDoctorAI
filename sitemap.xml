@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <!-- Home - AI-powered farming platform with disease detection, calculators, and more -->
+  </url>
+  
+  <!-- Core Tools (High Priority) -->
+  
+  <!-- Disease Detector Tool -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/detect</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <!-- Disease Detector - Upload crop photos to detect diseases using AI. Get treatment recommendations in Bangla and English -->
+  </url>
+  
+  <!-- Fertilizer Calculator Tool -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/fertilizer</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <!-- Fertilizer Calculator - Calculate exact NPK fertilizer amounts for your crops based on land area (acre/bigha) -->
+  </url>
+  
+  <!-- Pesticide Calculator Tool -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/pesticide</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <!-- Pesticide Calculator - Get pesticide application schedule and dosage for your crops. Includes sprayer calibration -->
+  </url>
+  
+  <!-- Soil Fertility Analysis Tool -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/soil-fertility</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <!-- Soil Fertility Index - Analyze soil nutrients (NPK, pH, moisture) using GPS location and satellite data -->
+  </url>
+  
+  <!-- Weather Forecast Tool -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/weather</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+    <!-- Micro-Climate Weather - Get hyper-local 7-day forecast with soil temperature and moisture for farming -->
+  </url>
+  
+  <!-- Download Pages (High Priority for App Distribution) -->
+  
+  <!-- Main Download Page -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/download</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <!-- Download App - Install Crop Doctor AI on your phone. Available as PWA and Android APK -->
+  </url>
+  
+  <!-- Android APK Download -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/download/android</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+    <!-- Android APK Download - Download Crop Doctor AI APK for Android devices (Android 6.0+) -->
+  </url>
+  
+  <!-- PWA Installation Guide -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/download/pwa</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <!-- PWA Installation - Install Crop Doctor AI as Progressive Web App on any device -->
+  </url>
+  
+  <!-- App Features Showcase -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/app-features</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+    <!-- App Features - Offline disease detection, fertilizer calculator, soil analysis, and more -->
+  </url>
+  
+  <!-- User Features (Medium Priority) -->
+  
+  <!-- Farmer Dashboard -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/dashboard</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.70</priority>
+    <!-- Farmer Dashboard - Track your crop cycles, growth stages, and farm management -->
+  </url>
+  
+  <!-- History Page -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/history</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+    <!-- History - View your past disease detections, calculations, and analyses -->
+  </url>
+  
+  <!-- Information Pages (Lower Priority) -->
+  
+  <!-- Training Resources -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/training</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.50</priority>
+    <!-- Training - Learn about crop diseases, farming techniques, and best practices -->
+  </url>
+  
+  <!-- Whitepaper -->
+  <url>
+    <loc>https://cropsdoctor.vercel.app/whitepaper</loc>
+    <lastmod>2026-01-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.45</priority>
+    <!-- Whitepaper - Technical documentation about Crop Doctor AI technology and methodology -->
+  </url>
+
+</urlset>

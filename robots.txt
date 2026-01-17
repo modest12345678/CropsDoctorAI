@@ -1,0 +1,31 @@
+# Crop Doctor AI - Sitemap & SEO
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://cropsdoctor.vercel.app/sitemap.xml
+
+# Crawl-delay (optional, helps prevent server overload)
+Crawl-delay: 1
+
+# Disallow admin/internal pages
+Disallow: /api/
+Disallow: /dashboard/cycle/
+Disallow: /trace/
+
+# Allow all main pages
+Allow: /
+Allow: /detect
+Allow: /fertilizer
+Allow: /pesticide
+Allow: /soil-fertility
+Allow: /weather
+Allow: /download
+Allow: /download/android
+Allow: /download/pwa
+Allow: /app-features
+Allow: /dashboard
+Allow: /history
+Allow: /training
+Allow: /whitepaper
