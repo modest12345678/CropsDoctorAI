@@ -11,7 +11,15 @@
             }
         },
         {
-            "src": "api/**/*.ts",
+            "src": "api/sitemap.xml.ts",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "api/robots.txt.ts",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "api/index.ts",
             "use": "@vercel/node"
         }
     ],
@@ -23,6 +31,14 @@
         {
             "src": "/robots.txt",
             "dest": "/api/robots.txt"
+        },
+        {
+            "src": "/api/sitemap.xml",
+            "dest": "/api/sitemap.xml.ts"
+        },
+        {
+            "src": "/api/robots.txt",
+            "dest": "/api/robots.txt.ts"
         },
         {
             "src": "/api/(.*)",
