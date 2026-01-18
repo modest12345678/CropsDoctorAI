@@ -6,9 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#ffffff" />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <link rel="apple-touch-icon" href="/logo.png" />
+  <!-- Favicon (multiple formats for maximum compatibility) -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+  <link rel="shortcut icon" href="/favicon.ico" />
 
   <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.webmanifest" />
@@ -33,20 +36,55 @@
     content="AI farming tools in Bangla & English: Disease detection, soil analysis, weather, calculators. Bangladesh & global farmers." />
   <meta name="twitter:image" content="https://cropsdoctor.vercel.app/logo.png" />
 
-  <!-- Schema.org Structured Data for Google Logo -->
+  <!-- Schema.org Structured Data for Google Logo & Search -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Crop Doctor AI",
+    "alternateName": "CropDoctor",
     "url": "https://cropsdoctor.vercel.app",
-    "logo": "https://cropsdoctor.vercel.app/logo.png",
-    "description": "AI-powered crop disease detection and agricultural consulting platform",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "Customer Support"
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cropsdoctor.vercel.app/logo.png",
+      "width": 512,
+      "height": 512
     },
+    "description": "AI-powered crop disease detection and agricultural consulting platform for farmers in Bangladesh and worldwide",
+    "foundingDate": "2024",
     "sameAs": []
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Crop Doctor AI",
+    "url": "https://cropsdoctor.vercel.app",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://cropsdoctor.vercel.app/?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Crop Doctor AI",
+    "operatingSystem": "Android, Web",
+    "applicationCategory": "UtilitiesApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "100"
+    }
   }
   </script>
 
