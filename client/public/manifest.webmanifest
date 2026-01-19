@@ -1,5 +1,5 @@
 {
-    "name": "Crop Doctor AI",
+    "name": "Crop Doctor",
     "short_name": "Crop Doctor",
     "description": "AI farming assistant in Bangla & English. Disease detection, soil analysis, weather, fertilizer calculators.",
     "start_url": "/",
