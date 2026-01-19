@@ -1,26 +1,31 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from "openai";
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// Initialize Google Gemini client
-let genAI: GoogleGenerativeAI | null = null;
+// Initialize Groq client (using OpenAI SDK compatibility)
+let groqClient: OpenAI | null = null;
 
-function getGeminiClient() {
-  if (!genAI) {
-    const apiKey = process.env.GOOGLE_API_KEY;
+function getGroqClient() {
+  if (!groqClient) {
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      throw new Error("GOOGLE_API_KEY is not set in environment variables");
+      throw new Error("GROQ_API_KEY is not set in environment variables");
     }
-    genAI = new GoogleGenerativeAI(apiKey);
+    groqClient = new OpenAI({
+      apiKey: apiKey,
+      baseURL: "https://api.groq.com/openai/v1"
+    });
   }
-  return genAI;
+  return groqClient;
 }
 
-// Helper to get the model - using Gemini's stable models
+// Helper to get the model
 function getModel(type: "vision" | "text" = "text") {
-  // gemini-2.0-flash supports both vision and text
-  return "gemini-2.0-flash";
+  if (type === "vision") {
+    return "llama-3.2-11b-vision-preview";
+  }
+  return "llama-3.3-70b-versatile";
 }
 
 export interface DiseaseAnalysis {
@@ -126,8 +131,8 @@ export async function analyzeCropDisease(
   language: "en" | "bn" = "en"
 ): Promise<DiseaseAnalysis> {
   try {
-    const client = getGeminiClient();
-    const model = client.getGenerativeModel({ model: getModel("vision") });
+    const client = getGroqClient();
+    const model = getModel("vision");
 
     const cropInfo = cropDiseaseInfo[cropType];
     const diseaseList = cropInfo.diseases.map(disease => `- ${disease}`).join('\n');
@@ -194,24 +199,33 @@ ${diseaseList}
 - Treatment must be ARRAY of detailed, farmer-friendly steps
 - Use natural, encouraging language`;
 
-    // Process base64 image - strip prefix if present
-    let base64Data = base64Image;
-    if (base64Image.startsWith("data:")) {
-      base64Data = base64Image.split(",")[1];
+    // Process base64 image - ensure it has the prefix
+    let imageUrl = base64Image;
+    if (!base64Image.startsWith("data:")) {
+      imageUrl = `data:image/jpeg;base64,${base64Image}`;
     }
 
-    const result = await model.generateContent({
-      contents: [{
-        role: "user",
-        parts: [
-          { text: prompt },
-          { inlineData: { mimeType: "image/jpeg", data: base64Data } }
-        ]
-      }],
-      generationConfig: { responseMimeType: "application/json" }
+    const response = await client.chat.completions.create({
+      model: model,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: prompt },
+            {
+              type: "image_url",
+              image_url: {
+                url: imageUrl,
+              },
+            },
+          ],
+        },
+      ],
+      response_format: { type: "json_object" },
     });
 
-    const text = result.response.text();
+    const text = response.choices[0].message.content;
+    if (!text) throw new Error("Empty response from Groq");
 
     let parsedResult: any;
     try {
@@ -251,8 +265,8 @@ export async function analyzePotatoDisease(base64Image: string): Promise<Disease
 
 export async function chatWithAI(message: string, language: "en" | "bn" = "en"): Promise<{ response: string }> {
   try {
-    const client = getGeminiClient();
-    const model = client.getGenerativeModel({ model: getModel("text") });
+    const client = getGroqClient();
+    const model = getModel("text");
 
     const languageInstruction = language === "bn"
       ? "The user's interface is in Bengali. You MUST reply in Bengali (বাংলা) unless explicitly asked to speak English."
@@ -307,8 +321,12 @@ User Question: ${message}
 
 Analyze if this is farming-related. If YES, answer helpfully. If NO, politely decline using the exact template above.`;
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const response = await client.chat.completions.create({
+      model: model,
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const text = response.choices[0].message.content;
 
     return { response: text || "I apologize, but I couldn't generate a response at this time." };
   } catch (error: any) {
@@ -368,8 +386,8 @@ export async function calculateFertilizer(
   language: "en" | "bn" = "en"
 ): Promise<FertilizerRecommendation> {
   try {
-    const client = getGeminiClient();
-    const model = client.getGenerativeModel({ model: getModel("text") });
+    const client = getGroqClient();
+    const model = getModel("text");
 
     // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
     const areaInAcres = unit === "bigha" ? area * 0.33 : area;
@@ -417,12 +435,14 @@ IMPORTANT:
 - "perUnitList" should contain the STANDARD rate per 1 ${unit} for reference.
 - Return arrays for recommendations, organicOptions, and perUnitList.`;
 
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json" }
+    const response = await client.chat.completions.create({
+      model: model,
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
     });
 
-    const text = result.response.text();
+    const text = response.choices[0].message.content;
+    if (!text) throw new Error("Empty response from Groq");
 
     let parsedResult: any;
     try {
@@ -494,8 +514,8 @@ export async function calculatePesticide(
   language: "en" | "bn" = "en"
 ): Promise<PesticideRecommendation> {
   try {
-    const client = getGeminiClient();
-    const model = client.getGenerativeModel({ model: getModel("text") });
+    const client = getGroqClient();
+    const model = getModel("text");
 
     // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
     const areaInAcres = unit === "bigha" ? area * 0.33 : area;
@@ -544,12 +564,14 @@ export async function calculatePesticide(
     - Format numbers modifiers to the language (Bengali digits if bn).
     - Return valid JSON only.`;
 
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: "application/json" }
+    const response = await client.chat.completions.create({
+      model: model,
+      messages: [{ role: "user", content: prompt }],
+      response_format: { type: "json_object" },
     });
 
-    const text = result.response.text();
+    const text = response.choices[0].message.content;
+    if (!text) throw new Error("Empty response from Groq");
 
     let parsedResult: any;
     try {
