@@ -23,7 +23,8 @@ function getGroqClient() {
 // Helper to get the model
 function getModel(type: "vision" | "text" = "text") {
   if (type === "vision") {
-    return "llama-3.2-11b-vision-preview";
+    // Verified working vision model as of late Jan 2026
+    return "meta-llama/llama-4-scout-17b-16e-instruct";
   }
   return "llama-3.3-70b-versatile";
 }
