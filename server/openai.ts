@@ -22,10 +22,11 @@ function getGroqClient() {
 
 // Helper to get the model name - using Groq's available models
 function getModel(type: "vision" | "text" = "text") {
-  // For vision tasks, use llama-3.2-90b-vision-instruct (stable model)
+  // For vision tasks, use llama-4-scout-17b-16e-instruct (Llama 4 Vision)
   // For text tasks, use llama-3.3-70b-versatile (faster, good for text)
   if (type === "vision") {
-    return "llama-3.2-90b-vision-instruct";
+    // Note: Groq often uses the shorter ID if available, but the full ID is safer based on docs
+    return "llama-4-scout-17b-16e-instruct";
   }
   return "llama-3.3-70b-versatile";
 }
