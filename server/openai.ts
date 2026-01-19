@@ -1,34 +1,26 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// Initialize Groq client (using OpenAI SDK compatibility)
-let groqClient: OpenAI | null = null;
+// Initialize Google Gemini client
+let genAI: GoogleGenerativeAI | null = null;
 
-function getGroqClient() {
-  if (!groqClient) {
-    const apiKey = process.env.GROQ_API_KEY;
+function getGeminiClient() {
+  if (!genAI) {
+    const apiKey = process.env.GOOGLE_API_KEY;
     if (!apiKey) {
-      throw new Error("GROQ_API_KEY is not set in environment variables");
+      throw new Error("GOOGLE_API_KEY is not set in environment variables");
     }
-    groqClient = new OpenAI({
-      apiKey: apiKey,
-      baseURL: "https://api.groq.com/openai/v1"
-    });
+    genAI = new GoogleGenerativeAI(apiKey);
   }
-  return groqClient;
+  return genAI;
 }
 
-// Helper to get the model name - using Groq's available models
+// Helper to get the model - using Gemini's stable models
 function getModel(type: "vision" | "text" = "text") {
-  // For vision tasks, use llama-4-scout-17b-16e-instruct (Llama 4 Vision)
-  // For text tasks, use llama-3.3-70b-versatile (faster, good for text)
-  if (type === "vision") {
-    // Note: Groq often uses the shorter ID if available, but the full ID is safer based on docs
-    return "llama-4-scout-17b-16e-instruct";
-  }
-  return "llama-3.3-70b-versatile";
+  // gemini-2.0-flash supports both vision and text
+  return "gemini-2.0-flash";
 }
 
 export interface DiseaseAnalysis {
@@ -134,8 +126,8 @@ export async function analyzeCropDisease(
   language: "en" | "bn" = "en"
 ): Promise<DiseaseAnalysis> {
   try {
-    const client = getGroqClient();
-    const model = getModel("vision");
+    const client = getGeminiClient();
+    const model = client.getGenerativeModel({ model: getModel("vision") });
 
     const cropInfo = cropDiseaseInfo[cropType];
     const diseaseList = cropInfo.diseases.map(disease => `- ${disease}`).join('\n');
@@ -202,33 +194,36 @@ ${diseaseList}
 - Treatment must be ARRAY of detailed, farmer-friendly steps
 - Use natural, encouraging language`;
 
-    // Process base64 image
-    let imageUrl = base64Image;
-    if (!base64Image.startsWith("data:")) {
-      imageUrl = `data:image/jpeg;base64,${base64Image}`;
+    // Process base64 image - strip prefix if present
+    let base64Data = base64Image;
+    if (base64Image.startsWith("data:")) {
+      base64Data = base64Image.split(",")[1];
     }
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: prompt },
-            { type: "image_url", image_url: { url: imageUrl } },
-          ],
-        },
-      ],
-      response_format: { type: "json_object" },
+    const result = await model.generateContent({
+      contents: [{
+        role: "user",
+        parts: [
+          { text: prompt },
+          { inlineData: { mimeType: "image/jpeg", data: base64Data } }
+        ]
+      }],
+      generationConfig: { responseMimeType: "application/json" }
     });
 
-    const text = response.choices[0]?.message?.content || "{}";
+    const text = result.response.text();
 
     let parsedResult: any;
     try {
-      parsedResult = JSON.parse(text);
+      // Handle potential markdown code block wrapping
+      let jsonText = text.trim();
+      if (jsonText.startsWith("```")) {
+        jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+      }
+      parsedResult = JSON.parse(jsonText);
     } catch (parseError) {
       console.error("JSON Parse Error:", parseError);
+      console.error("Raw response:", text);
       throw new Error("Failed to parse AI response");
     }
 
@@ -256,8 +251,8 @@ export async function analyzePotatoDisease(base64Image: string): Promise<Disease
 
 export async function chatWithAI(message: string, language: "en" | "bn" = "en"): Promise<{ response: string }> {
   try {
-    const client = getGroqClient();
-    const model = getModel("text");
+    const client = getGeminiClient();
+    const model = client.getGenerativeModel({ model: getModel("text") });
 
     const languageInstruction = language === "bn"
       ? "The user's interface is in Bengali. You MUST reply in Bengali (বাংলা) unless explicitly asked to speak English."
@@ -312,14 +307,10 @@ User Question: ${message}
 
 Analyze if this is farming-related. If YES, answer helpfully. If NO, politely decline using the exact template above.`;
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [{ role: "user", content: prompt }],
-    });
+    const result = await model.generateContent(prompt);
+    const text = result.response.text();
 
-    const text = response.choices[0]?.message?.content || "I apologize, but I couldn't generate a response at this time.";
-
-    return { response: text };
+    return { response: text || "I apologize, but I couldn't generate a response at this time." };
   } catch (error: any) {
     console.error("Error in chatWithAI:", error);
     throw new Error(`Failed to get chat response: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -354,7 +345,7 @@ function toEnglishNumber(text: string): string {
 function formatFertilizerText(content: string | string[], language: "en" | "bn"): string | string[] {
   const processText = (text: string) => {
     // Match patterns like "50 kg", "৫০ কেজি", "50kg", "2000.50 kg"
-    const pattern = /([\d০-৯]+(?:[.\.][\d০-৯]+)?)\s*(kg|কেজি|কিলোগ্রাম)/gi;
+    const pattern = /([\d০-৯]+(?:[.\.][\ d০-৯]+)?)\s*(kg|কেজি|কিলোগ্রাম)/gi;
 
     return text.replace(pattern, (match, amount, unit) => {
       // Just ensure the number is in the correct language format
@@ -377,8 +368,8 @@ export async function calculateFertilizer(
   language: "en" | "bn" = "en"
 ): Promise<FertilizerRecommendation> {
   try {
-    const client = getGroqClient();
-    const model = getModel("text");
+    const client = getGeminiClient();
+    const model = client.getGenerativeModel({ model: getModel("text") });
 
     // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
     const areaInAcres = unit === "bigha" ? area * 0.33 : area;
@@ -426,17 +417,20 @@ IMPORTANT:
 - "perUnitList" should contain the STANDARD rate per 1 ${unit} for reference.
 - Return arrays for recommendations, organicOptions, and perUnitList.`;
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: "application/json" }
     });
 
-    const text = response.choices[0]?.message?.content || "{}";
+    const text = result.response.text();
 
     let parsedResult: any;
     try {
-      parsedResult = JSON.parse(text);
+      let jsonText = text.trim();
+      if (jsonText.startsWith("```")) {
+        jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+      }
+      parsedResult = JSON.parse(jsonText);
     } catch (parseError) {
       console.error("JSON Parse Error:", parseError);
       console.error("Failed to parse content:", text);
@@ -500,8 +494,8 @@ export async function calculatePesticide(
   language: "en" | "bn" = "en"
 ): Promise<PesticideRecommendation> {
   try {
-    const client = getGroqClient();
-    const model = getModel("text");
+    const client = getGeminiClient();
+    const model = client.getGenerativeModel({ model: getModel("text") });
 
     // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
     const areaInAcres = unit === "bigha" ? area * 0.33 : area;
@@ -550,17 +544,20 @@ export async function calculatePesticide(
     - Format numbers modifiers to the language (Bengali digits if bn).
     - Return valid JSON only.`;
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: "application/json" }
     });
 
-    const text = response.choices[0]?.message?.content || "{}";
+    const text = result.response.text();
 
     let parsedResult: any;
     try {
-      parsedResult = JSON.parse(text);
+      let jsonText = text.trim();
+      if (jsonText.startsWith("```")) {
+        jsonText = jsonText.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+      }
+      parsedResult = JSON.parse(jsonText);
     } catch (parseError) {
       console.error("JSON Parse Error:", parseError);
       throw new Error("Failed to parse AI response");
