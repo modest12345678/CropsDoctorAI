@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Smartphone, CheckCircle2, AlertCircle, ExternalLink, HardDrive, Wifi } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=14XXDEWI51DK93GHAu6I3a75vtgKrGWAv&confirm=t';
+const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=14XXDEWI51DK93GHAu6I3a75vtgKrGWAv';
 
 export default function AndroidDownloadPage() {
     const { t } = useLanguage();

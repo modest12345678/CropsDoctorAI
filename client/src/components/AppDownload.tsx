@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Download, Smartphone, Check, ExternalLink, Apple, Chrome } from 'lucide-react';
 import { Capacitor } from '@capacitor/core';
 
-// APK download URL - Hosted on Google Drive (keeps source code private)
-const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=14XXDEWI51DK93GHAu6I3a75vtgKrGWAv&confirm=t';
+// APK hosted on Google Drive (Direct Download Link)
+const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=14XXDEWI51DK93GHAu6I3a75vtgKrGWAv';
 
 export function AppDownload() {
     const { language } = useLanguage();
