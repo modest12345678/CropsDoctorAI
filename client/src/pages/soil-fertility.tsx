@@ -400,8 +400,74 @@ export default function SoilFertility() {
                         </p>
                     </div>
                 </div>
-            )
-            }
+            )}
+
+            {/* Static Educational Content for SEO */}
+            <div className="mt-12 pt-8 border-t space-y-8 animate-in fade-in duration-1000">
+                <div className="space-y-4">
+                    <h3 className="text-2xl font-bold flex items-center gap-2">
+                        <TestTube2 className="w-6 h-6 text-primary" />
+                        {language === "bn" ? "মাটির পুষ্টি উপাদান পরিচিতি" : "Understanding Soil Parameters"}
+                    </h3>
+                    <p className="text-muted-foreground">
+                        {language === "bn" 
+                            ? "স্বাস্থ্যকর ফসল ফলানোর জন্য মাটির পুষ্টি উপাদানগুলো সম্পর্কে জানা জরুরি। নিচে প্রধান উপাদানগুলোর কাজ বর্ণনা করা হলো।" 
+                            : "Understanding your soil's nutrient composition is crucial for maximizing crop yield. Here is what each parameter means for your farm."}
+                    </p>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-lg text-green-700">Nitrogen (N)</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                {language === "bn" 
+                                    ? "গাছপালার বৃদ্ধি ও পাতা সবুজ রাখার জন্য নাইট্রোজেন অপরিহার্য। এর অভাবে গাছের বৃদ্ধি কমে যায় এবং পাতা হলুদ হয়ে যায়।" 
+                                    : "Essential for leaf growth and green color (chlorophyll). Nitrogen deficiency leads to stunted growth and yellowing leaves."}
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-lg text-yellow-700">Phosphorus (P)</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                {language === "bn" 
+                                    ? "শিকড় গঠন এবং ফুল ও ফল ধরার জন্য ফসফরাস গুরুত্বপূর্ণ। এটি শক্তি স্থানান্তরে সাহায্য করে।" 
+                                    : "Crucial for root development, flowering, and fruiting. Phosphorus helps in energy transfer within the plant."}
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-lg text-orange-700">Potassium (K)</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                {language === "bn" 
+                                    ? "রোগ প্রতিরোধ ক্ষমতা বাড়ায় এবং পানির ভারসাম্য রক্ষা করে। পটাশিয়ামের অভাবে ফসলের গুণগত মান কমে যায়।" 
+                                    : "Improves disease resistance and water regulation. Potassium ensures high-quality grain and fruit production."}
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-lg text-blue-700">pH Level</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                {language === "bn" 
+                                    ? "মাটির অম্লতা বা ক্ষারত্ব নির্দেশ করে। সঠিক pH না থাকলে গাছ মাটি থেকে পুষ্টি গ্রহণ করতে পারে না।" 
+                                    : "Measures soil acidity or alkalinity. Nutrients are most available to plants when soil pH is between 6.0 and 7.5."}
+                            </p>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+
         </div >
     );
 }

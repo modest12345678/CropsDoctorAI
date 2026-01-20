@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, History as HistoryIcon, Image as ImageIcon } from "lucide-react";
+import { Loader2, History as HistoryIcon, Image as ImageIcon, TrendingUp, CalendarClock, FileSpreadsheet, Sprout } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { useLanguage } from "@/lib/LanguageContext";
 import type { Detection } from "@shared/schema";
@@ -113,6 +113,56 @@ export default function History() {
             ))}
           </div>
         )}
+
+        {/* Static Benefits Section for SEO */}
+        <div className="mt-16 bg-muted/30 p-8 rounded-xl border border-muted">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                <TrendingUp className="w-6 h-6 text-primary" />
+                {language === "bn" ? "ইতিহাস সংরক্ষণের সুবিধা" : "Benefits of Tracking History"}
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8">
+                <div className="flex flex-col gap-3">
+                    <div className="bg-background p-3 w-fit rounded-full shadow-sm">
+                        <CalendarClock className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <h3 className="font-semibold text-lg">
+                        {language === "bn" ? "মৌসুমী রোগ নির্ণয়" : "Seasonal Patterns"}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                        {language === "bn" 
+                            ? "অতীতের তথ্য বিশ্লেষণ করে আপনি বুঝতে পারবেন বছরের কোন সময়ে কোন রোগের প্রাদুর্ভাব বেশি হয়।"
+                            : "Analyze past data to understand when specific diseases are most likely to occur during the year."}
+                    </p>
+                </div>
+                <div className="flex flex-col gap-3">
+                    <div className="bg-background p-3 w-fit rounded-full shadow-sm">
+                        <FileSpreadsheet className="w-6 h-6 text-green-600" />
+                    </div>
+                    <h3 className="font-semibold text-lg">
+                        {language === "bn" ? "ফলাফল তুলনা" : "Treatment Efficacy"}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                        {language === "bn" 
+                            ? "আপনার প্রয়োগ করা চিকিৎসার কার্যকারিতা ট্র্যাক করুন এবং ভবিষ্যতের জন্য সেরা পদ্ধতি বেছে নিন।"
+                            : "Keep track of which treatments worked best for your crops to make better decisions in the future."}
+                    </p>
+                </div>
+                <div className="flex flex-col gap-3">
+                    <div className="bg-background p-3 w-fit rounded-full shadow-sm">
+                        <Sprout className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <h3 className="font-semibold text-lg">
+                        {language === "bn" ? "উন্নত ফলন" : "Better Yield"}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                        {language === "bn" 
+                            ? "নিয়মিত পর্যবেক্ষণের মাধ্যমে আপনি রোগের প্রাদুর্ভাব কমাতে পারেন এবং ফসলের উৎপাদন বাড়াতে পারেন।"
+                            : "Regular monitoring helps you prevent large-scale outbreaks, ensuring a healthier harvest and better profits."}
+                    </p>
+                </div>
+            </div>
+        </div>
+
       </div>
     </div>
   );
