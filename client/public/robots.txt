@@ -6,9 +6,6 @@ Allow: /
 # Sitemap location
 Sitemap: https://cropsdoctor.vercel.app/sitemap.xml
 
-# Crawl-delay (optional, helps prevent server overload)
-Crawl-delay: 1
-
 # Disallow admin/internal pages
 Disallow: /api/
 Disallow: /dashboard/cycle/
@@ -29,3 +26,4 @@ Allow: /dashboard
 Allow: /history
 Allow: /training
 Allow: /whitepaper
+
