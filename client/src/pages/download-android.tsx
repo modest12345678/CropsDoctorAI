@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Smartphone, CheckCircle2, AlertCircle, ExternalLink, HardDrive, Wifi } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const APK_DOWNLOAD_URL = '/CropsDoctorAI-release.apk';
+const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=1V270j7aAw-3Mz0gnhhKGkDiHmwC8L6dS';
 
 export default function AndroidDownloadPage() {
     const { t } = useLanguage();

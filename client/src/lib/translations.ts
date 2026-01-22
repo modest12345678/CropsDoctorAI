@@ -84,8 +84,8 @@ export const translations = {
     // Fertilizer Calculator
     fertilizerCalculator: "Fertilizer Calculator",
     fertilizerDescription: "Calculate optimal fertilizer requirements for your crops based on area and crop type",
-    area: "Area",
-    areaPlaceholder: "Enter cultivated area",
+    area: "Amount of Land",
+    areaPlaceholder: "Enter amount of land",
     selectUnit: "Select Unit",
     acre: "Acre",
     bigha: "Bigha",
@@ -362,8 +362,8 @@ export const translations = {
     // Fertilizer Calculator
     fertilizerCalculator: "সার ক্যালকুলেটর",
     fertilizerDescription: "আপনার ফসলের জন্য এলাকা এবং ফসলের ধরনের উপর ভিত্তি করে সর্বোত্তম সার প্রয়োজনীয়তা গণনা করুন",
-    area: "এলাকা",
-    areaPlaceholder: "চাষকৃত এলাকা লিখুন",
+    area: "জমির পরিমাণ",
+    areaPlaceholder: "জমির পরিমাণ লিখুন",
     selectUnit: "একক নির্বাচন করুন",
     acre: "একর",
     bigha: "বিঘা",
