@@ -7,7 +7,7 @@ import { Download, Smartphone, Check, ExternalLink, Apple, Chrome } from 'lucide
 import { Capacitor } from '@capacitor/core';
 
 // APK hosted directly on Vercel for one-click download
-const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=1V270j7aAw-3Mz0gnhhKGkDiHmwC8L6dS';
+const APK_DOWNLOAD_URL = 'https://drive.google.com/uc?export=download&id=1B9tzBEyj22h4GE-kha-wZtc-G_hiiasS';
 
 export function AppDownload() {
     const { language } = useLanguage();
