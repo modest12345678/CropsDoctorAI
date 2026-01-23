@@ -103,15 +103,35 @@ async function authenticateGEE(keyContent: any): Promise<boolean> {
     });
 }
 
-// Generate deterministic mock data based on location
-function getMockData(lat: number, lng: number): SoilData {
-    // Round coordinates to ~1.1km precision (2 decimal places) to stabilize results against GPS drift
-    const stableLat = parseFloat(lat.toFixed(2));
-    const stableLng = parseFloat(lng.toFixed(2));
+// Simple hash function for deterministic random generation
+function hashCode(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
+}
 
-    const seed = Math.abs(stableLat * stableLng * 1000);
+// Generate deterministic mock data based on location using grid snapping
+function getMockData(lat: number, lng: number): SoilData {
+    // Grid size: ~500m (0.005 degrees ≈ 500m at equator)
+    // This ensures that small GPS drift doesn't change the results
+    const GRID_SIZE = 0.005;
+
+    // Snap to grid cells using floor to ensure same cell for nearby coordinates
+    const gridLat = Math.floor(lat / GRID_SIZE) * GRID_SIZE;
+    const gridLng = Math.floor(lng / GRID_SIZE) * GRID_SIZE;
+
+    // Create a stable string-based seed from grid coordinates
+    // This guarantees the same seed for coordinates within the same grid cell
+    const seedString = `soil_${gridLat.toFixed(4)}_${gridLng.toFixed(4)}`;
+    const seed = hashCode(seedString);
+
+    // Seeded random function - produces consistent values for the same seed
     const random = (offset: number) => {
-        const x = Math.sin(seed + offset) * 10000;
+        const x = Math.sin(seed + offset * 12345) * 10000;
         return x - Math.floor(x);
     };
 
