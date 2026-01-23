@@ -104,7 +104,7 @@ export function AppDownload() {
                 </div>
 
                 {/* APK Download Button */}
-                <a href={APK_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer" className="block">
+                <a href={APK_DOWNLOAD_URL} download="CropDoctorAI.apk" className="block">
                     <Button
                         variant="outline"
                         className="w-full py-5 gap-3 border-2 hover:bg-green-50 hover:border-green-500 hover:text-green-700"

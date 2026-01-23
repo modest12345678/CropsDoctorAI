@@ -44,7 +44,7 @@ export default function AndroidDownloadPage() {
                     </p>
 
                     {/* Download Button */}
-                    <a href={APK_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
+                    <a href={APK_DOWNLOAD_URL} download="CropDoctorAI.apk">
                         <Button size="lg" className="gap-3 bg-green-600 hover:bg-green-700 text-lg px-8 py-6">
                             <Download className="w-6 h-6" />
                             {t.downloadNow}
@@ -140,7 +140,7 @@ export default function AndroidDownloadPage() {
 
                 {/* Download Again */}
                 <div className="text-center">
-                    <a href={APK_DOWNLOAD_URL} target="_blank" rel="noopener noreferrer">
+                    <a href={APK_DOWNLOAD_URL} download="CropDoctorAI.apk">
                         <Button size="lg" className="gap-3 bg-green-600 hover:bg-green-700">
                             <Download className="w-5 h-5" />
                             {t.downloadNow}
