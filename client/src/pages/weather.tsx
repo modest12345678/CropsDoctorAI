@@ -270,6 +270,61 @@ export default function WeatherForecast() {
                     </div>
                 </div>
             )}
+
+            {/* SEO Content Section */}
+            <div className="mt-12 grid gap-8 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <Card className="bg-cyan-50/50 dark:bg-cyan-950/20 border-cyan-100 dark:border-cyan-900 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-cyan-800 dark:text-cyan-400">
+                            <Cloud className="w-5 h-5" />
+                            {language === "bn" ? "কিভাবে কাজ করে" : "How it Works"}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ol className="space-y-3 text-cyan-900/80 dark:text-cyan-100/80">
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-cyan-200 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">1</span>
+                                <span>{language === "bn" ? "অবস্থান বাটনে ক্লিক করুন" : "Click the location button."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-cyan-200 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">2</span>
+                                <span>{language === "bn" ? "GPS আপনার অবস্থান সনাক্ত করবে" : "GPS detects your exact farm location."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-cyan-200 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">3</span>
+                                <span>{language === "bn" ? "রিয়েল-টাইম আবহাওয়া ডেটা পান" : "Get real-time weather data for your area."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-cyan-200 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">4</span>
+                                <span>{language === "bn" ? "৭ দিনের পূর্বাভাস দেখুন" : "View 7-day detailed forecast."}</span>
+                            </li>
+                        </ol>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-blue-50/50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-blue-800 dark:text-blue-400">
+                            <CloudRain className="w-5 h-5" />
+                            {language === "bn" ? "কেন মাইক্রো-ক্লাইমেট আবহাওয়া?" : "Why Micro-Climate Weather?"}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 text-blue-900/80 dark:text-blue-100/80">
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 text-blue-600 flex-shrink-0">✓</span>
+                            <p><span className="font-semibold text-blue-800 dark:text-blue-300">{language === "bn" ? "হাইপার-লোকাল:" : "Hyper-Local:"}</span> {language === "bn" ? "আপনার খামারের সঠিক স্থান থেকে" : "Exact weather for your farm location."}</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 text-blue-600 flex-shrink-0">✓</span>
+                            <p><span className="font-semibold text-blue-800 dark:text-blue-300">{language === "bn" ? "মাটির তাপমাত্রা:" : "Soil Temperature:"}</span> {language === "bn" ? "বীজ বপনের জন্য গুরুত্বপূর্ণ" : "Critical for planting decisions."}</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 text-blue-600 flex-shrink-0">✓</span>
+                            <p><span className="font-semibold text-blue-800 dark:text-blue-300">{language === "bn" ? "বৃষ্টির সম্ভাবনা:" : "Rain Probability:"}</span> {language === "bn" ? "সেচ পরিকল্পনা করুন" : "Plan irrigation effectively."}</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

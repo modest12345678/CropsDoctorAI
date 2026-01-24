@@ -314,6 +314,61 @@ export default function Fertilizer() {
                 </div>
             </div>
 
+            {/* SEO Content Section - Visible to Crawler */}
+            <div className="max-w-4xl mx-auto px-4 mt-12 grid gap-8 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <Card className="bg-green-50/50 dark:bg-green-950/20 border-green-100 dark:border-green-900 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-green-800 dark:text-green-400">
+                            <Calculator className="w-5 h-5" />
+                            {language === "bn" ? "কিভাবে কাজ করে" : "How it Works"}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ol className="space-y-3 text-green-900/80 dark:text-green-100/80">
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">1</span>
+                                <span>{language === "bn" ? "আপনার ফসল নির্বাচন করুন (ধান, গম, আলু ইত্যাদি)" : "Select your crop type (rice, wheat, potato, etc.)"}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">2</span>
+                                <span>{language === "bn" ? "আপনার জমির পরিমাণ লিখুন (বিঘা বা একর)" : "Enter your land area in bigha or acres."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">3</span>
+                                <span>{language === "bn" ? "AI স্বয়ংক্রিয়ভাবে সার গণনা করবে" : "Our AI calculates exact fertilizer amounts."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">4</span>
+                                <span>{language === "bn" ? "ইউরিয়া, টিএসপি, পটাশ ও জৈব বিকল্প পান" : "Get Urea, TSP, Potash & organic alternatives."}</span>
+                            </li>
+                        </ol>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-blue-50/50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-blue-800 dark:text-blue-400">
+                            <Sprout className="w-5 h-5" />
+                            {language === "bn" ? "কেন AI সার ক্যালকুলেটর?" : "Why AI Fertilizer Calculator?"}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 text-blue-900/80 dark:text-blue-100/80">
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0">✓</span>
+                            <p><span className="font-semibold text-blue-800 dark:text-blue-300">{language === "bn" ? "সঠিক পরিমাণ:" : "Precise Amounts:"}</span> {language === "bn" ? "অপচয় ছাড়াই সঠিক সার পরিমাণ পান" : "Get exact fertilizer quantities without wastage."}</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0">✓</span>
+                            <p><span className="font-semibold text-blue-800 dark:text-blue-300">{language === "bn" ? "খরচ সাশ্রয়:" : "Cost Saving:"}</span> {language === "bn" ? "সঠিক পরিমাণে অর্থ ও সার সাশ্রয় করুন" : "Save money by using only what's needed."}</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0">✓</span>
+                            <p><span className="font-semibold text-blue-800 dark:text-blue-300">{language === "bn" ? "জৈব বিকল্প:" : "Organic Options:"}</span> {language === "bn" ? "পরিবেশ বান্ধব জৈব সার সুপারিশ" : "Eco-friendly organic fertilizer alternatives."}</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
             <FloatingActions />
         </div>
     );

@@ -318,6 +318,61 @@ export default function Pesticide() {
                 </div>
             </div>
 
+            {/* SEO Content Section */}
+            <div className="max-w-4xl mx-auto px-4 mt-12 grid gap-8 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-8 duration-700">
+                <Card className="bg-red-50/50 dark:bg-red-950/20 border-red-100 dark:border-red-900 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-red-800 dark:text-red-400">
+                            <Bug className="w-5 h-5" />
+                            {language === "bn" ? "কিভাবে কাজ করে" : "How it Works"}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ol className="space-y-3 text-red-900/80 dark:text-red-100/80">
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">1</span>
+                                <span>{language === "bn" ? "আপনার ফসল নির্বাচন করুন" : "Select your crop type."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">2</span>
+                                <span>{language === "bn" ? "জমির পরিমাণ লিখুন (বিঘা/একর)" : "Enter your land area in bigha or acres."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">3</span>
+                                <span>{language === "bn" ? "AI কীটনাশক সময়সূচী তৈরি করবে" : "AI generates pesticide schedule."}</span>
+                            </li>
+                            <li className="flex gap-2">
+                                <span className="font-bold bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200 w-6 h-6 rounded-full flex items-center justify-center text-sm flex-shrink-0">4</span>
+                                <span>{language === "bn" ? "স্প্রেয়ার ক্যালিব্রেশন পান" : "Get exact sprayer calibration dose."}</span>
+                            </li>
+                        </ol>
+                    </CardContent>
+                </Card>
+
+                <Card className="bg-orange-50/50 dark:bg-orange-950/20 border-orange-100 dark:border-orange-900 shadow-sm">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-orange-800 dark:text-orange-400">
+                            <FlaskConical className="w-5 h-5" />
+                            {language === "bn" ? "কেন AI কীটনাশক ক্যালকুলেটর?" : "Why AI Pesticide Calculator?"}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4 text-orange-900/80 dark:text-orange-100/80">
+                        <div className="flex gap-3">
+                            <CheckCircle2 className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+                            <p><span className="font-semibold text-orange-800 dark:text-orange-300">{language === "bn" ? "সঠিক ডোজ:" : "Correct Dosage:"}</span> {language === "bn" ? "অতিরিক্ত কীটনাশক ব্যবহার এড়ান" : "Avoid overuse of pesticides."}</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <CheckCircle2 className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+                            <p><span className="font-semibold text-orange-800 dark:text-orange-300">{language === "bn" ? "নিরাপদ ফসল:" : "Safe Crops:"}</span> {language === "bn" ? "সঠিক পদ্ধতিতে ফসল রক্ষা করুন" : "Protect crops with proper methods."}</p>
+                        </div>
+                        <div className="flex gap-3">
+                            <CheckCircle2 className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+                            <p><span className="font-semibold text-orange-800 dark:text-orange-300">{language === "bn" ? "খরচ কমান:" : "Reduce Costs:"}</span> {language === "bn" ? "সঠিক পরিমাণে অর্থ সাশ্রয় করুন" : "Save money with precise amounts."}</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
             <FloatingActions
                 isChatOpen={isChatOpen}
                 onChatOpenChange={setIsChatOpen}
