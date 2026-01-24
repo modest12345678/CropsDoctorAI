@@ -12,7 +12,7 @@ export default function DetectPage() {
     const cropsEn = ["Rice", "Wheat", "Corn (Maize)", "Potato", "Tomato", "Tea", "Sugarcane", "Jute", "Mustard", "Mango", "Banana", "Brinjal", "Chili", "Onion", "Garlic", "Ginger", "Turmeric"];
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="min-h-screen bg-background">
             <SEO
                 title="Disease Detector"
                 description="Upload photos of your crops to instantly detect diseases using AI and get organic treatment recommendations."
@@ -21,7 +21,7 @@ export default function DetectPage() {
             <DiseaseDetector />
 
             {/* SEO Content Section - Visible to Crawler */}
-            <div className="mt-16 grid gap-8 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="max-w-4xl mx-auto px-4 pb-8 mt-16 grid gap-8 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-8 duration-700">
                 <Card className="bg-green-50/50 dark:bg-green-950/20 border-green-100 dark:border-green-900 shadow-sm">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-green-800 dark:text-green-400">

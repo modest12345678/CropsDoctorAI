@@ -157,7 +157,7 @@ export default function DiseaseDetector() {
     };
 
     return (
-        <div className="min-h-screen bg-background pb-8">
+        <div className="bg-background pb-8">
             <FeatureNav />
             <div
                 className="relative bg-cover bg-center overflow-hidden mb-8"
