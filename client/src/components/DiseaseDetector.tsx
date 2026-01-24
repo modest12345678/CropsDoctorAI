@@ -2,12 +2,14 @@
 import { useState, useRef } from "react";
 import { Loader2, Sparkles, Upload, Camera, X, Stethoscope } from "lucide-react";
 import { ProcessingAnimation } from "@/components/ProcessingAnimation";
+import { SuccessAnimation } from "@/components/SuccessAnimation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -22,11 +24,13 @@ export default function DiseaseDetector() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [selectedCrop, setSelectedCrop] = useState<CropType>("potato");
     const [detectionResult, setDetectionResult] = useState<Detection | null>(null);
+    const [showSuccess, setShowSuccess] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const cameraInputRef = useRef<HTMLInputElement>(null);
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const { language, t } = useLanguage();
+    const haptic = useHapticFeedback();
 
     const cropOptions = [
         { value: "potato", label: t.crops.potato, icon: "🥔" },
@@ -58,9 +62,21 @@ export default function DiseaseDetector() {
         onSuccess: (data) => {
             setDetectionResult(data);
             queryClient.invalidateQueries({ queryKey: ["/api/detections"] });
+
+            // Check if plant is healthy and show success animation
+            const isHealthy = data.diseaseName?.toLowerCase().includes('healthy') ||
+                data.diseaseName?.toLowerCase().includes('no disease');
+            if (isHealthy) {
+                setShowSuccess(true);
+                haptic.trigger('success');
+            } else {
+                haptic.trigger('medium');
+            }
+
             toast({ title: t.diseaseDetected, description: t.diseaseIdentified(data.diseaseName, data.confidence) });
         },
         onError: (error: Error) => {
+            haptic.trigger('error');
             toast({ title: t.detectionFailed, description: error.message, variant: "destructive" });
         },
     });
@@ -350,6 +366,13 @@ export default function DiseaseDetector() {
             </div>
 
             <FloatingActions />
+
+            {/* Success celebration for healthy plants */}
+            <SuccessAnimation
+                show={showSuccess}
+                message={language === "bn" ? "সুস্থ গাছ!" : "Healthy Plant!"}
+                onComplete={() => setShowSuccess(false)}
+            />
         </div>
     );
 }

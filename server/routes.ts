@@ -4,11 +4,34 @@ import { storage } from "./storage.js";
 import { analyzeCropDisease, type CropType } from "./openai.js";
 import { insertDetectionSchema, insertTrainingDataSchema, insertFarmingCycleSchema, insertFarmingStageSchema } from "../shared/schema.js";
 import { z } from "zod";
+import { requireAdmin } from "./middleware/auth.js";
+
+// Validation schemas
+const cropTypeEnum = z.enum(["potato", "tomato", "corn", "wheat", "rice", "jute", "sugarcane", "tea", "mustard", "mango", "banana", "brinjal", "chili", "onion", "garlic", "ginger", "turmeric", "lentil", "watermelon", "papaya"]);
+const languageEnum = z.enum(["en", "bn"]).default("en");
+const unitEnum = z.enum(["acre", "bigha"]);
 
 const detectRequestSchema = z.object({
   imageData: z.string().min(1, "Image data is required"),
-  cropType: z.enum(["potato", "tomato", "corn", "wheat", "rice", "jute", "sugarcane", "tea", "mustard", "mango", "banana", "brinjal", "chili", "onion", "garlic", "ginger", "turmeric", "lentil", "watermelon", "papaya"]).default("potato"),
-  language: z.enum(["en", "bn"]).default("en"),
+  cropType: cropTypeEnum.default("potato"),
+  language: languageEnum,
+});
+
+const chatRequestSchema = z.object({
+  message: z.string().min(1, "Message is required").max(2000, "Message too long"),
+  language: languageEnum,
+});
+
+const calculatorRequestSchema = z.object({
+  cropType: cropTypeEnum,
+  area: z.number().positive("Area must be positive"),
+  unit: unitEnum,
+  language: languageEnum,
+});
+
+const locationSchema = z.object({
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -170,18 +193,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Chat with AI
   app.post("/api/chat", async (req, res) => {
     try {
-      const { message, language } = req.body;
-      if (!message) {
-        return res.status(400).json({ message: "Message is required" });
-      }
-
-      // Import dynamically to avoid circular dependency issues if any, though here it's fine
+      const validated = chatRequestSchema.parse(req.body);
       const { chatWithAI } = await import("./openai.js");
-      const response = await chatWithAI(message, language);
-
-
+      const response = await chatWithAI(validated.message, validated.language);
       res.json(response);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid request", errors: error.errors });
+      }
       console.error("Chat error:", error);
       res.status(500).json({ message: "Failed to process chat request" });
     }
@@ -190,29 +209,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Fertilizer calculator
   app.post("/api/fertilizer", async (req, res) => {
     try {
-      const { cropType, area, unit, language } = req.body;
-
-      if (!cropType || !area || !unit) {
-        return res.status(400).json({ message: "cropType, area, and unit are required" });
-      }
-
-      if (unit !== "acre" && unit !== "bigha") {
-        return res.status(400).json({ message: "Unit must be 'acre' or 'bigha'" });
-      }
-
+      const validated = calculatorRequestSchema.parse(req.body);
       const { calculateFertilizer } = await import("./openai.js");
-      const recommendations = await calculateFertilizer(cropType, area, unit, language);
+      const recommendations = await calculateFertilizer(
+        validated.cropType as CropType,
+        validated.area,
+        validated.unit,
+        validated.language
+      );
 
-      // Save to history
       await storage.createFertilizerHistory({
-        crop: cropType,
-        area,
-        unit,
+        crop: validated.cropType,
+        area: String(validated.area),
+        unit: validated.unit,
         result: JSON.stringify(recommendations),
       });
 
       res.json(recommendations);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid request", errors: error.errors });
+      }
       console.error("Fertilizer calculation error:", error);
       res.status(500).json({ message: "Failed to calculate fertilizer recommendations" });
     }
@@ -221,28 +238,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Pesticide calculator endpoint
   app.post("/api/pesticide", async (req, res) => {
     try {
-      const { cropType, area, unit, language } = req.body;
-
-      if (!cropType || !area || !unit) {
-        return res.status(400).json({ message: "cropType, area, and unit are required" });
-      }
-
-      if (unit !== "acre" && unit !== "bigha") {
-        return res.status(400).json({ message: "Unit must be 'acre' or 'bigha'" });
-      }
-
+      const validated = calculatorRequestSchema.parse(req.body);
       const { calculatePesticide } = await import("./openai.js");
-      const recommendations = await calculatePesticide(cropType, area, unit, language);
-
-      // Note: We might want to store this in history too, but for now we won't strictly enforce it unless requested.
-      // But let's log usage.
-      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-      if (ip) {
-        // reuse existing tracking if possible or just log
-      }
-
+      const recommendations = await calculatePesticide(
+        validated.cropType as CropType,
+        validated.area,
+        validated.unit,
+        validated.language
+      );
       res.json(recommendations);
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid request", errors: error.errors });
+      }
       console.error("Pesticide calculation error:", error);
       res.status(500).json({ message: "Failed to calculate pesticide recommendations" });
     }
@@ -404,8 +412,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin Endpoints
-  app.get("/api/admin/users", async (req, res) => {
+  // Admin Endpoints (protected with API key)
+  app.get("/api/admin/users", requireAdmin, async (req, res) => {
     try {
       const users = await storage.getUsers();
       res.json(users);
@@ -415,7 +423,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/stats", async (req, res) => {
+  app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
       const data = await storage.getAllData();
       res.json(data.stats);
@@ -425,7 +433,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/export", async (req, res) => {
+  app.get("/api/admin/export", requireAdmin, async (req, res) => {
     try {
       const data = await storage.getAllData();
       res.json(data);
@@ -435,7 +443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/errors", async (req, res) => {
+  app.get("/api/admin/errors", requireAdmin, async (req, res) => {
     try {
       const errors = await storage.getErrorLogs();
       res.json(errors);

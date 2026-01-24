@@ -6,21 +6,31 @@ import { Toaster } from "@/components/ui/toaster";
 import { HelmetProvider } from "react-helmet-async";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider, useLanguage } from "@/lib/LanguageContext";
-import Home from "@/pages/home";
-import History from "@/pages/history";
-import Fertilizer from "@/pages/fertilizer";
-import NotFound from "@/pages/not-found";
-import Training from "@/pages/training";
-import TracePage from "@/pages/trace";
-import FarmerDashboard from "@/pages/farmer-dashboard";
-import AddStage from "@/pages/add-stage";
-import DetectPage from "@/pages/detect";
-import SoilFertility from "@/pages/soil-fertility";
-import WeatherForecast from "@/pages/weather";
-import Pesticide from "@/pages/pesticide";
+import { lazy, Suspense } from "react";
+
+// Lazy-loaded pages for code splitting
+const Home = lazy(() => import("@/pages/home"));
+const History = lazy(() => import("@/pages/history"));
+const Fertilizer = lazy(() => import("@/pages/fertilizer"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+const Training = lazy(() => import("@/pages/training"));
+const TracePage = lazy(() => import("@/pages/trace"));
+const FarmerDashboard = lazy(() => import("@/pages/farmer-dashboard"));
+const AddStage = lazy(() => import("@/pages/add-stage"));
+const DetectPage = lazy(() => import("@/pages/detect"));
+const SoilFertility = lazy(() => import("@/pages/soil-fertility"));
+const WeatherForecast = lazy(() => import("@/pages/weather"));
+const Pesticide = lazy(() => import("@/pages/pesticide"));
+const Whitepaper = lazy(() => import("@/pages/whitepaper"));
+const DownloadPage = lazy(() => import("@/pages/download"));
+const AndroidDownloadPage = lazy(() => import("@/pages/download-android"));
+const PWADownloadPage = lazy(() => import("@/pages/download-pwa"));
+const AppFeaturesPage = lazy(() => import("@/pages/app-features"));
+
 import { Leaf, Home as HomeIcon, History as HistoryIcon, GraduationCap, Languages, Stethoscope, Sprout, FileText, LayoutGrid, CloudRain, Calendar as CalendarIcon, MapPin, Bug } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,6 +78,9 @@ function Navigation() {
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Dark mode toggle */}
+            <DarkModeToggle />
 
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -155,6 +168,8 @@ function Navigation() {
 
 function Footer() {
   const { t } = useLanguage();
+  // Build date computed once at module level to avoid re-renders
+  const BUILD_DATE = "2026-01-24";
   return (
     <footer className="border-t py-6 mt-auto bg-card/50 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-4 text-sm text-muted-foreground">
@@ -166,17 +181,19 @@ function Footer() {
             {t.whitepaper}
           </a>
         </Link>
-        <span className="text-xs opacity-50">v1.1.1 (Build: {new Date().toISOString().split('T')[0]})</span>
+        <span className="text-xs opacity-50">v1.1.1 (Build: {BUILD_DATE})</span>
       </div>
     </footer>
   );
 }
-
-import Whitepaper from "@/pages/whitepaper";
-import DownloadPage from "@/pages/download";
-import AndroidDownloadPage from "@/pages/download-android";
-import PWADownloadPage from "@/pages/download-pwa";
-import AppFeaturesPage from "@/pages/app-features";
+// Loading spinner component for Suspense fallback
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-[50vh]">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+    </div>
+  );
+}
 
 function Router() {
   return (
@@ -233,7 +250,9 @@ function App() {
           <LanguageProvider>
             <Navigation />
             <div className="min-h-[calc(100vh-4rem-5rem)] pb-[env(safe-area-inset-bottom)]">
-              <Router />
+              <Suspense fallback={<PageLoader />}>
+                <Router />
+              </Suspense>
             </div>
             <Footer />
             <Toaster />
