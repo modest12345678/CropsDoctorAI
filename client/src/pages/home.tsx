@@ -17,8 +17,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Crop Doctor - Home"
-        description="Crop Doctor AI: Your personal plant doctor and farming assistant. Detect crop diseases, calculate fertilizers, and analyze soil health instantly."
+        title="Smart Farming Assistant - Plant Disease Detection"
+        description="Crop Doctor AI: Free AI-powered plant disease detection for farmers. Instantly identify crop diseases from photos, calculate fertilizers, and analyze soil health. Available in Bangla & English."
       />
       <div className="relative bg-cover bg-center overflow-hidden mb-8" style={{ backgroundImage: "url('/hero-bg.png')" }}>
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
