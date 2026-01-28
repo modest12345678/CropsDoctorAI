@@ -3,21 +3,157 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// Initialize Groq client (using OpenAI SDK compatibility)
-let groqClient: OpenAI | null = null;
+// Multi-API Key Fallback System
+interface ApiKeyState {
+  key: string;
+  isRateLimited: boolean;
+  rateLimitResetTime: number | null;
+}
 
-function getGroqClient() {
-  if (!groqClient) {
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      throw new Error("GROQ_API_KEY is not set in environment variables");
+let apiKeyStates: ApiKeyState[] = [];
+let currentKeyIndex = 0;
+let groqClients: Map<string, OpenAI> = new Map();
+
+// Initialize API keys from environment variables
+function initializeApiKeys() {
+  if (apiKeyStates.length > 0) return; // Already initialized
+
+  const keys: string[] = [];
+
+  // Primary key
+  if (process.env.GROQ_API_KEY) {
+    keys.push(process.env.GROQ_API_KEY);
+  }
+
+  // Additional keys (GROQ_API_KEY_2, GROQ_API_KEY_3, etc.)
+  for (let i = 2; i <= 10; i++) {
+    const key = process.env[`GROQ_API_KEY_${i}`];
+    if (key) {
+      keys.push(key);
     }
-    groqClient = new OpenAI({
+  }
+
+  if (keys.length === 0) {
+    throw new Error("No GROQ_API_KEY environment variables found. Set at least GROQ_API_KEY.");
+  }
+
+  apiKeyStates = keys.map(key => ({
+    key,
+    isRateLimited: false,
+    rateLimitResetTime: null
+  }));
+
+  console.log(`[Groq Fallback] Initialized with ${keys.length} API key(s)`);
+}
+
+// Get an available API key, cycling through if rate limited
+function getAvailableApiKey(): string {
+  initializeApiKeys();
+
+  const now = Date.now();
+
+  // Reset any keys whose rate limit has expired (1 minute cooldown)
+  apiKeyStates.forEach(state => {
+    if (state.isRateLimited && state.rateLimitResetTime && now >= state.rateLimitResetTime) {
+      state.isRateLimited = false;
+      state.rateLimitResetTime = null;
+      console.log(`[Groq Fallback] API key ...${state.key.slice(-6)} rate limit reset`);
+    }
+  });
+
+  // Try to find an available key starting from current index
+  for (let i = 0; i < apiKeyStates.length; i++) {
+    const index = (currentKeyIndex + i) % apiKeyStates.length;
+    if (!apiKeyStates[index].isRateLimited) {
+      currentKeyIndex = index;
+      return apiKeyStates[index].key;
+    }
+  }
+
+  // All keys are rate limited - find the one that resets soonest
+  let soonestReset = Infinity;
+  let soonestIndex = 0;
+  apiKeyStates.forEach((state, index) => {
+    if (state.rateLimitResetTime && state.rateLimitResetTime < soonestReset) {
+      soonestReset = state.rateLimitResetTime;
+      soonestIndex = index;
+    }
+  });
+
+  throw new Error(`All ${apiKeyStates.length} API keys are rate limited. Try again in ${Math.ceil((soonestReset - now) / 1000)} seconds.`);
+}
+
+// Mark current key as rate limited and switch to next
+function handleRateLimitError(failedKey: string) {
+  const keyState = apiKeyStates.find(s => s.key === failedKey);
+  if (keyState) {
+    keyState.isRateLimited = true;
+    keyState.rateLimitResetTime = Date.now() + 60000; // 1 minute cooldown
+    console.log(`[Groq Fallback] API key ...${failedKey.slice(-6)} hit rate limit, cooling down for 60s`);
+  }
+
+  // Move to next key
+  currentKeyIndex = (currentKeyIndex + 1) % apiKeyStates.length;
+}
+
+// Get Groq client for a specific API key
+function getGroqClientForKey(apiKey: string): OpenAI {
+  if (!groqClients.has(apiKey)) {
+    groqClients.set(apiKey, new OpenAI({
       apiKey: apiKey,
       baseURL: "https://api.groq.com/openai/v1"
-    });
+    }));
   }
-  return groqClient;
+  return groqClients.get(apiKey)!;
+}
+
+// Main function to get client - will retry with fallback keys on rate limit
+function getGroqClient(): OpenAI {
+  const apiKey = getAvailableApiKey();
+  return getGroqClientForKey(apiKey);
+}
+
+// Execute API call with automatic fallback on rate limit
+async function executeWithFallback<T>(
+  operation: (client: OpenAI) => Promise<T>,
+  maxRetries: number = 3
+): Promise<T> {
+  initializeApiKeys();
+
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const apiKey = getAvailableApiKey();
+    const client = getGroqClientForKey(apiKey);
+
+    try {
+      return await operation(client);
+    } catch (error: any) {
+      lastError = error;
+
+      // Check if it's a rate limit error (HTTP 429)
+      const isRateLimited =
+        error?.status === 429 ||
+        error?.code === 'rate_limit_exceeded' ||
+        error?.message?.toLowerCase().includes('rate limit') ||
+        error?.message?.toLowerCase().includes('too many requests');
+
+      if (isRateLimited) {
+        console.log(`[Groq Fallback] Rate limit hit on key ...${apiKey.slice(-6)}, attempt ${attempt + 1}/${maxRetries}`);
+        handleRateLimitError(apiKey);
+
+        // If we have more keys to try, continue
+        if (attempt < maxRetries - 1) {
+          continue;
+        }
+      } else {
+        // Not a rate limit error, throw immediately
+        throw error;
+      }
+    }
+  }
+
+  throw lastError || new Error("All API key attempts failed");
 }
 
 // Helper to get the model
@@ -131,18 +267,15 @@ export async function analyzeCropDisease(
   cropType: CropType,
   language: "en" | "bn" = "en"
 ): Promise<DiseaseAnalysis> {
-  try {
-    const client = getGroqClient();
-    const model = getModel("vision");
+  const model = getModel("vision");
+  const cropInfo = cropDiseaseInfo[cropType];
+  const diseaseList = cropInfo.diseases.map(disease => `- ${disease}`).join('\n');
 
-    const cropInfo = cropDiseaseInfo[cropType];
-    const diseaseList = cropInfo.diseases.map(disease => `- ${disease}`).join('\n');
+  const languageInstruction = language === "bn"
+    ? "Provide all responses in Bengali (বাংলা) language. Use very natural, fluent, and encouraging farmer-friendly language."
+    : "Provide all responses in English language. Use very natural, fluent, and encouraging farmer-friendly language.";
 
-    const languageInstruction = language === "bn"
-      ? "Provide all responses in Bengali (বাংলা) language. Use very natural, fluent, and encouraging farmer-friendly language."
-      : "Provide all responses in English language. Use very natural, fluent, and encouraging farmer-friendly language.";
-
-    const prompt = `You are an expert agricultural pathologist specializing in ${cropInfo.specialization}. 
+  const prompt = `You are an expert agricultural pathologist specializing in ${cropInfo.specialization}. 
     
 ${languageInstruction}
 
@@ -200,29 +333,33 @@ ${diseaseList}
 - Treatment must be ARRAY of detailed, farmer-friendly steps
 - Use natural, encouraging language`;
 
-    // Process base64 image - ensure it has the prefix
-    let imageUrl = base64Image;
-    if (!base64Image.startsWith("data:")) {
-      imageUrl = `data:image/jpeg;base64,${base64Image}`;
-    }
+  // Process base64 image - ensure it has the prefix
+  let imageUrl = base64Image;
+  if (!base64Image.startsWith("data:")) {
+    imageUrl = `data:image/jpeg;base64,${base64Image}`;
+  }
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: prompt },
-            {
-              type: "image_url",
-              image_url: {
-                url: imageUrl,
+  try {
+    // Use executeWithFallback for automatic API key switching on rate limit
+    const response = await executeWithFallback(async (client) => {
+      return client.chat.completions.create({
+        model: model,
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: prompt },
+              {
+                type: "image_url",
+                image_url: {
+                  url: imageUrl,
+                },
               },
-            },
-          ],
-        },
-      ],
-      response_format: { type: "json_object" },
+            ],
+          },
+        ],
+        response_format: { type: "json_object" },
+      });
     });
 
     const text = response.choices[0].message.content;
@@ -265,15 +402,13 @@ export async function analyzePotatoDisease(base64Image: string): Promise<Disease
 }
 
 export async function chatWithAI(message: string, language: "en" | "bn" = "en"): Promise<{ response: string }> {
-  try {
-    const client = getGroqClient();
-    const model = getModel("text");
+  const model = getModel("text");
 
-    const languageInstruction = language === "bn"
-      ? "The user's interface is in Bengali. You MUST reply in Bengali (বাংলা) unless explicitly asked to speak English."
-      : "The user's interface is in English. However, if the user asks a question in Bengali (or asks to speak in Bengali), you MUST switch to Bengali immediately and reply in Bengali. Do not refuse to speak Bengali.";
+  const languageInstruction = language === "bn"
+    ? "The user's interface is in Bengali. You MUST reply in Bengali (বাংলা) unless explicitly asked to speak English."
+    : "The user's interface is in English. However, if the user asks a question in Bengali (or asks to speak in Bengali), you MUST switch to Bengali immediately and reply in Bengali. Do not refuse to speak Bengali.";
 
-    const prompt = `You are 'Crop Doctor AI', an expert agricultural consultant fluent in both English and Bengali (Bangla).
+  const prompt = `You are 'Crop Doctor AI', an expert agricultural consultant fluent in both English and Bengali (Bangla).
 ${languageInstruction}
 
 **YOUR STRICT ROLE:**
@@ -322,9 +457,13 @@ User Question: ${message}
 
 Analyze if this is farming-related. If YES, answer helpfully. If NO, politely decline using the exact template above.`;
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [{ role: "user", content: prompt }],
+  try {
+    // Use executeWithFallback for automatic API key switching on rate limit
+    const response = await executeWithFallback(async (client) => {
+      return client.chat.completions.create({
+        model: model,
+        messages: [{ role: "user", content: prompt }],
+      });
     });
 
     const text = response.choices[0].message.content;
@@ -386,19 +525,17 @@ export async function calculateFertilizer(
   unit: "acre" | "bigha",
   language: "en" | "bn" = "en"
 ): Promise<FertilizerRecommendation> {
-  try {
-    const client = getGroqClient();
-    const model = getModel("text");
+  const model = getModel("text");
 
-    // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
-    const areaInAcres = unit === "bigha" ? area * 0.33 : area;
+  // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
+  const areaInAcres = unit === "bigha" ? area * 0.33 : area;
 
-    const cropInfo = cropDiseaseInfo[cropType];
-    const languageInstruction = language === "bn"
-      ? "Provide all responses in Bengali (বাংলা) language. Use very natural, fluent, and encouraging farmer-friendly language."
-      : "Provide all responses in English language. Use very natural, fluent, and encouraging farmer-friendly language.";
+  const cropInfo = cropDiseaseInfo[cropType];
+  const languageInstruction = language === "bn"
+    ? "Provide all responses in Bengali (বাংলা) language. Use very natural, fluent, and encouraging farmer-friendly language."
+    : "Provide all responses in English language. Use very natural, fluent, and encouraging farmer-friendly language.";
 
-    const prompt = `You are an expert agricultural consultant specializing in ${cropInfo.specialization} in Bangladesh.
+  const prompt = `You are an expert agricultural consultant specializing in ${cropInfo.specialization} in Bangladesh.
 
 ${languageInstruction}
 
@@ -436,10 +573,14 @@ IMPORTANT:
 - "perUnitList" should contain the STANDARD rate per 1 ${unit} for reference.
 - Return arrays for recommendations, organicOptions, and perUnitList.`;
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
+  try {
+    // Use executeWithFallback for automatic API key switching on rate limit
+    const response = await executeWithFallback(async (client) => {
+      return client.chat.completions.create({
+        model: model,
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" },
+      });
     });
 
     const text = response.choices[0].message.content;
@@ -514,19 +655,17 @@ export async function calculatePesticide(
   unit: "acre" | "bigha",
   language: "en" | "bn" = "en"
 ): Promise<PesticideRecommendation> {
-  try {
-    const client = getGroqClient();
-    const model = getModel("text");
+  const model = getModel("text");
 
-    // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
-    const areaInAcres = unit === "bigha" ? area * 0.33 : area;
+  // Convert bigha to acres for consistency (1 bigha ≈ 0.33 acres)
+  const areaInAcres = unit === "bigha" ? area * 0.33 : area;
 
-    const cropInfo = cropDiseaseInfo[cropType];
-    const languageInstruction = language === "bn"
-      ? "Provide all responses in Bengali (বাংলা) language. Use very natural, fluent, and encouraging farmer-friendly language."
-      : "Provide all responses in English language. Use very natural, fluent, and encouraging farmer-friendly language.";
+  const cropInfo = cropDiseaseInfo[cropType];
+  const languageInstruction = language === "bn"
+    ? "Provide all responses in Bengali (বাংলা) language. Use very natural, fluent, and encouraging farmer-friendly language."
+    : "Provide all responses in English language. Use very natural, fluent, and encouraging farmer-friendly language.";
 
-    const prompt = `You are an expert agricultural consultant known as 'Crop Doctor AI'.
+  const prompt = `You are an expert agricultural consultant known as 'Crop Doctor AI'.
     
     ${languageInstruction}
 
@@ -565,10 +704,14 @@ export async function calculatePesticide(
     - Format numbers modifiers to the language (Bengali digits if bn).
     - Return valid JSON only.`;
 
-    const response = await client.chat.completions.create({
-      model: model,
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
+  try {
+    // Use executeWithFallback for automatic API key switching on rate limit
+    const response = await executeWithFallback(async (client) => {
+      return client.chat.completions.create({
+        model: model,
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" },
+      });
     });
 
     const text = response.choices[0].message.content;
