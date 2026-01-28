@@ -541,8 +541,22 @@ ${languageInstruction}
 
 The farmer wants to cultivate ${cropType} on ${area} ${unit} (approximately ${areaInAcres.toFixed(2)} acres).
 
-CRITICAL INSTRUCTION: Provide TOTAL amounts for the ENTIRE ${area} ${unit} area directly. Do NOT provide per-unit amounts in the recommendations.
-For example, if the recommendation is 50 kg Urea per acre for 2 acres, state "100 kg Urea", not "50 kg Urea per acre".
+**CRITICAL MATH INSTRUCTION - READ CAREFULLY:**
+
+1. First, calculate the TOTAL fertilizer needed for ${area} ${unit}:
+   - Example: If 20 kg Urea per bigha, then for ${area} bigha = ${area} × 20 = ${area * 20} kg TOTAL Urea
+
+2. Then SPLIT this total across multiple application steps:
+   - Example for ${area * 20} kg total Urea:
+     - Basal (Day 0): 40% = ${Math.round(area * 20 * 0.4)} kg
+     - 1st Top Dressing: 30% = ${Math.round(area * 20 * 0.3)} kg  
+     - 2nd Top Dressing: 30% = ${Math.round(area * 20 * 0.3)} kg
+   - The SUM of all steps MUST EQUAL the total (not exceed it!)
+
+3. **VALIDATION**: Before responding, verify:
+   - Add up all Urea amounts in recommendations → must equal perUnitList rate × ${area}
+   - Add up all TSP amounts in recommendations → must equal perUnitList rate × ${area}
+   - Add up all MoP amounts in recommendations → must equal perUnitList rate × ${area}
 
 Provide JSON with:
 {
@@ -550,9 +564,9 @@ Provide JSON with:
   "area": ${area},
   "unit": "${unit}",
   "recommendations": [
-    "Step 1: Land Preparation (Day 0) - Apply X kg Urea, Y kg TSP... Mix well with soil during final ploughing.",
-    "Step 2: First Top Dressing (Day 15-20) - Apply X kg Urea... Apply when soil has moisture.",
-    "Step 3: Second Top Dressing (Day 35-40)..."
+    "Step 1: Land Preparation (Day 0) - Apply X kg Urea (40% of total), Y kg TSP (full amount)... Mix well with soil.",
+    "Step 2: First Top Dressing (Day 15-20) - Apply X kg Urea (30% of total)... Apply when soil has moisture.",
+    "Step 3: Second Top Dressing (Day 35-40) - Apply X kg Urea (remaining 30%)..."
   ],
   "organicOptions": [
     "Cow Dung: Apply X kg during land preparation...",
@@ -565,13 +579,12 @@ Provide JSON with:
   ]
 }
 
-IMPORTANT:
-- MERGE the application schedule INTO the recommendations steps. Do not create a separate schedule section.
-- Each recommendation step MUST include the TIMING (e.g., "Day 0", "Day 20").
-- Be very descriptive, fluent, and helpful. Explain WHY and HOW to apply in a way a farmer would understand easily.
-- All fertilizer amounts in the "recommendations" and "organicOptions" must be the TOTAL amount for the specified ${area} ${unit} area.
-- "perUnitList" should contain the STANDARD rate per 1 ${unit} for reference.
-- Return arrays for recommendations, organicOptions, and perUnitList.`;
+IMPORTANT RULES:
+- The SUM of fertilizer in all recommendation steps must EQUAL (perUnitList rate × ${area}), NOT exceed it
+- TSP and MoP are usually applied once (100% at basal), but Urea is SPLIT across 2-3 applications
+- Each step must include the TIMING (Day 0, Day 20, etc.)
+- "perUnitList" shows standard rate per 1 ${unit} for reference
+- Double-check your math before responding!`;
 
   try {
     // Use executeWithFallback for automatic API key switching on rate limit
