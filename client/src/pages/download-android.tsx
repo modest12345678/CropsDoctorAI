@@ -28,6 +28,11 @@ export default function AndroidDownloadPage() {
             <SEO
                 title={t.androidPageTitle}
                 description={t.downloadAndroidDesc}
+                isAppDownload={true}
+                appVersion="1.1.1"
+                appSize="26 MB"
+                appCategory="Agriculture"
+                keywords="crop doctor android app, plant disease detection app, agriculture app download, farming app apk, crop doctor apk download, free farming app bangladesh"
             />
 
             {/* Hero Section */}
