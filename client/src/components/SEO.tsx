@@ -126,6 +126,43 @@ export function SEO({
 
     const schemaData = isAppDownload ? appDownloadSchema : websiteSchema;
 
+    // Generate BreadcrumbList schema based on current route
+    const pathSegments = location.split('/').filter(Boolean);
+    const pageNameMap: Record<string, string> = {
+        'detect': 'Disease Detector',
+        'fertilizer': 'Fertilizer Calculator',
+        'pesticide': 'Pesticide Calculator',
+        'soil-fertility': 'Soil Analysis',
+        'weather': 'Weather Forecast',
+        'history': 'History',
+        'download': 'Download',
+        'download-android': 'Android Download',
+        'download-pwa': 'PWA Install',
+        'whitepaper': 'Whitepaper',
+        'training': 'Training',
+        'dashboard': 'Dashboard',
+        'app-features': 'App Features'
+    };
+
+    const breadcrumbSchema = pathSegments.length > 0 ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": siteUrl
+            },
+            ...pathSegments.map((segment, index) => ({
+                "@type": "ListItem",
+                "position": index + 2,
+                "name": pageNameMap[segment] || segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+                "item": `${siteUrl}/${pathSegments.slice(0, index + 1).join('/')}`
+            }))
+        ]
+    } : null;
+
     // Enhanced keywords for app download pages
     const appKeywords = isAppDownload
         ? `${keywords}, android app download, crop doctor apk, farming app android, agriculture app download, plant disease app, free farming app`
@@ -186,6 +223,12 @@ export function SEO({
             <script type="application/ld+json">
                 {JSON.stringify(schemaData)}
             </script>
+            {/* BreadcrumbList Schema for subpages */}
+            {breadcrumbSchema && (
+                <script type="application/ld+json">
+                    {JSON.stringify(breadcrumbSchema)}
+                </script>
+            )}
         </Helmet>
     );
 }

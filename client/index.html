@@ -10,7 +10,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  
+
   <!-- Fallback for older browsers -->
   <link rel="shortcut icon" href="/favicon.ico" />
 
@@ -93,6 +93,51 @@
       "ratingValue": "4.8",
       "ratingCount": "100"
     }
+  }
+  </script>
+
+  <!-- Preload critical resources for faster LCP -->
+  <link rel="preload" as="image" href="/hero-bg.png" fetchpriority="high" />
+
+  <!-- FAQPage Schema for Google Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I detect plant diseases using Crop Doctor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Simply take a photo of the affected plant leaf and upload it to Crop Doctor. Our AI will analyze the image and identify the disease within seconds, providing treatment recommendations."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Crop Doctor free to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Crop Doctor is completely free. You can detect plant diseases, calculate fertilizers, analyze soil health, and get weather forecasts at no cost."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What languages does Crop Doctor support?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Crop Doctor supports both English and Bengali (Bangla), making it accessible to farmers in Bangladesh and worldwide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use Crop Doctor on my Android phone?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, Crop Doctor is available as a free Android app. You can download the APK directly from our website or use it as a Progressive Web App (PWA)."
+        }
+      }
+    ]
   }
   </script>
 

@@ -45,7 +45,7 @@ export default function Home() {
                   <Link href="/detect">
                     <Button className="w-full text-lg h-32 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 shadow-lg group relative overflow-hidden border-0 flex flex-col items-center justify-center p-4 gap-2">
                       <div className="h-14 w-14 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm shrink-0 shadow-inner mb-1">
-                        <img src="/disease-detector.png" alt="Disease Detector" className="h-10 w-10 object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" />
+                        <img src="/disease-detector.png" alt="Disease Detector" width={40} height={40} className="h-10 w-10 object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       <div className="flex flex-col items-center">
                         <span className="relative z-10 font-bold text-xl leading-none text-white shadow-sm text-center">
@@ -63,7 +63,7 @@ export default function Home() {
                   <Link href="/fertilizer">
                     <Button className="w-full text-lg h-32 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-400 hover:to-cyan-500 shadow-lg group border-0 flex flex-col items-center justify-center p-4 gap-2">
                       <div className="h-14 w-14 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm shrink-0 shadow-inner mb-1">
-                        <img src="/fertilizer-calculator.png" alt="Fertilizer Calculator" className="h-10 w-10 object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" />
+                        <img src="/fertilizer-calculator.png" alt="Fertilizer Calculator" width={40} height={40} className="h-10 w-10 object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       <div className="flex flex-col items-center">
                         <span className="font-bold text-xl leading-none text-white shadow-sm text-center">
@@ -81,7 +81,7 @@ export default function Home() {
                   <Link href="/soil-fertility">
                     <Button className="w-full text-lg h-32 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 shadow-lg group border-0 flex flex-col items-center justify-center p-4 gap-2">
                       <div className="h-14 w-14 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm shrink-0 shadow-inner mb-1">
-                        <img src="/soil-satellite.png" alt="Soil Fertility" className="h-12 w-12 object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" />
+                        <img src="/soil-satellite.png" alt="Soil Fertility" width={48} height={48} className="h-12 w-12 object-contain filter drop-shadow-md group-hover:scale-110 transition-transform duration-300" />
                       </div>
                       <div className="flex flex-col items-center">
                         <span className="font-bold text-xl leading-none text-white shadow-sm text-center">
