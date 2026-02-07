@@ -64,6 +64,9 @@ export const users = pgTable("users", {
   ip: varchar("ip").primaryKey(),
   deviceInfo: text("device_info"), // Stored as JSON string
   userAgent: text("user_agent"),
+  country: text("country"),
+  city: text("city"),
+  region: text("region"),
   analysisCount: integer("analysis_count").notNull().default(0),
   lastSeen: timestamp("last_seen").notNull().defaultNow(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -98,6 +101,9 @@ export const userInfoSchema = z.object({
   ip: z.string().optional(),
   deviceInfo: z.any().optional(),
   userAgent: z.string().optional(),
+  country: z.string().optional(),
+  city: z.string().optional(),
+  region: z.string().optional(),
 });
 
 export type InsertDetection = z.infer<typeof insertDetectionSchema>;

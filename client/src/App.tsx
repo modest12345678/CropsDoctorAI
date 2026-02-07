@@ -231,10 +231,23 @@ function App() {
   useEffect(() => {
     const registerDevice = async () => {
       try {
-        const info = await Device.getInfo();
-        await apiRequest("POST", "/api/register", {
-          deviceInfo: info
+        // Try to get device info, fallback to basic browser info
+        let deviceInfo: any = { platform: 'web' };
+        try {
+          deviceInfo = await Device.getInfo();
+        } catch {
+          // Capacitor not available (browser), use navigator info
+          deviceInfo = {
+            platform: 'web',
+            operatingSystem: navigator.platform,
+            model: navigator.userAgent,
+          };
+        }
+
+        const response = await apiRequest("POST", "/api/register", {
+          deviceInfo
         });
+        console.log("📍 Visitor registered successfully:", response);
       } catch (error) {
         console.error("Failed to register device:", error);
       }

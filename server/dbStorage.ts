@@ -56,6 +56,9 @@ export class DbStorage implements IStorage {
             ip: userInfo.ip,
             deviceInfo: deviceInfoStr,
             userAgent: userInfo.userAgent,
+            country: userInfo.country || null,
+            city: userInfo.city || null,
+            region: userInfo.region || null,
             analysisCount: 0,
             lastSeen: new Date(),
             createdAt: new Date(),
@@ -64,6 +67,9 @@ export class DbStorage implements IStorage {
             set: {
                 deviceInfo: deviceInfoStr,
                 userAgent: userInfo.userAgent,
+                country: userInfo.country || undefined,
+                city: userInfo.city || undefined,
+                region: userInfo.region || undefined,
                 lastSeen: new Date(),
             }
         });

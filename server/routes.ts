@@ -164,18 +164,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Register user/device
+  // Register user/device with location tracking
   app.post("/api/register", async (req, res) => {
     try {
       const userInfo = req.body;
       const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const userIp = Array.isArray(ip) ? ip[0] : ip;
+
+      // Extract location from hosting provider headers (Vercel, Cloudflare, etc.)
+      const country = req.headers['x-vercel-ip-country'] as string ||
+        req.headers['cf-ipcountry'] as string ||
+        userInfo.country;
+      const city = req.headers['x-vercel-ip-city'] as string ||
+        req.headers['cf-ipcity'] as string ||
+        userInfo.city;
+      const region = req.headers['x-vercel-ip-country-region'] as string ||
+        req.headers['cf-region'] as string ||
+        userInfo.region;
 
       await storage.registerUser({
         ...userInfo,
-        ip: Array.isArray(ip) ? ip[0] : ip,
-        userAgent: req.headers['user-agent']
+        ip: userIp,
+        userAgent: req.headers['user-agent'],
+        country: country || null,
+        city: city ? decodeURIComponent(city) : null,
+        region: region || null,
       });
 
+      console.log(`📍 Visitor registered: ${userIp} from ${city || 'Unknown'}, ${country || 'Unknown'}`);
       res.json({ success: true });
     } catch (error) {
       console.error("Registration error:", error);

@@ -275,6 +275,16 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Reverting to MemStorage to ensure application stability while debugging DB connection
-export const storage: IStorage = new MemStorage();
+// Use DbStorage if DATABASE_URL is configured, otherwise fallback to MemStorage
+import { DbStorage } from "./dbStorage.js";
 
+function createStorage(): IStorage {
+  if (process.env.DATABASE_URL) {
+    console.log("✅ Using Neon database storage");
+    return new DbStorage();
+  }
+  console.log("⚠️ DATABASE_URL not set - using in-memory storage (data will be lost on restart)");
+  return new MemStorage();
+}
+
+export const storage: IStorage = createStorage();
