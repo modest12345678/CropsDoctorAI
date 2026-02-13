@@ -1,26 +1,44 @@
 
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import ws from 'ws';
+import * as dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import pg from 'pg';
+const { Pool } = pg;
 
-neonConfig.webSocketConstructor = ws;
+// Load .env
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '../.env') });
 
-const connectionString = 'postgresql://neondb_owner:npg_FTdQN4SD3oPl@ep-billowing-credit-a1q9bze8-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require';
+async function testDbConnection() {
+    console.log("--- Testing DB Connection ---");
 
-async function testConnection() {
-    console.log('Testing connection to Neon DB...');
-    const pool = new Pool({ connectionString });
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+        console.error("❌ DATABASE_URL not found in .env");
+        return;
+    }
+
+    console.log(`Connecting to DB: ${connectionString.slice(0, 20)}...`);
+
+    const pool = new Pool({
+        connectionString: connectionString,
+        ssl: { rejectUnauthorized: false } // Required for Neon sometimes
+    });
 
     try {
         const client = await pool.connect();
-        console.log('Connected successfully!');
-        const result = await client.query('SELECT NOW() as time');
-        console.log('Query result:', result.rows[0]);
+        console.log("✅ DB Connection successful!");
+
+        const res = await client.query('SELECT NOW()');
+        console.log("🕒 DB Time:", res.rows[0].now);
+
         client.release();
-    } catch (err) {
-        console.error('Connection failed:', err);
+    } catch (err: any) {
+        console.error("❌ DB Connection failed:", err.message);
     } finally {
         await pool.end();
     }
 }
 
-testConnection();
+testDbConnection();

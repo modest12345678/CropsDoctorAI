@@ -96,7 +96,10 @@ export default function SoilFertility() {
                 description: language === "bn" ? "অনুগ্রহ করে অপেক্ষা করুন..." : "Please wait..."
             });
 
-            const position = await Geolocation.getCurrentPosition();
+            const position = await Geolocation.getCurrentPosition({
+                enableHighAccuracy: false,
+                timeout: 10000
+            });
 
             const newCoords = {
                 lat: position.coords.latitude,
@@ -410,8 +413,8 @@ export default function SoilFertility() {
                         {language === "bn" ? "মাটির পুষ্টি উপাদান পরিচিতি" : "Understanding Soil Parameters"}
                     </h3>
                     <p className="text-muted-foreground">
-                        {language === "bn" 
-                            ? "স্বাস্থ্যকর ফসল ফলানোর জন্য মাটির পুষ্টি উপাদানগুলো সম্পর্কে জানা জরুরি। নিচে প্রধান উপাদানগুলোর কাজ বর্ণনা করা হলো।" 
+                        {language === "bn"
+                            ? "স্বাস্থ্যকর ফসল ফলানোর জন্য মাটির পুষ্টি উপাদানগুলো সম্পর্কে জানা জরুরি। নিচে প্রধান উপাদানগুলোর কাজ বর্ণনা করা হলো।"
                             : "Understanding your soil's nutrient composition is crucial for maximizing crop yield. Here is what each parameter means for your farm."}
                     </p>
                 </div>
@@ -423,8 +426,8 @@ export default function SoilFertility() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
-                                {language === "bn" 
-                                    ? "গাছপালার বৃদ্ধি ও পাতা সবুজ রাখার জন্য নাইট্রোজেন অপরিহার্য। এর অভাবে গাছের বৃদ্ধি কমে যায় এবং পাতা হলুদ হয়ে যায়।" 
+                                {language === "bn"
+                                    ? "গাছপালার বৃদ্ধি ও পাতা সবুজ রাখার জন্য নাইট্রোজেন অপরিহার্য। এর অভাবে গাছের বৃদ্ধি কমে যায় এবং পাতা হলুদ হয়ে যায়।"
                                     : "Essential for leaf growth and green color (chlorophyll). Nitrogen deficiency leads to stunted growth and yellowing leaves."}
                             </p>
                         </CardContent>
@@ -435,8 +438,8 @@ export default function SoilFertility() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
-                                {language === "bn" 
-                                    ? "শিকড় গঠন এবং ফুল ও ফল ধরার জন্য ফসফরাস গুরুত্বপূর্ণ। এটি শক্তি স্থানান্তরে সাহায্য করে।" 
+                                {language === "bn"
+                                    ? "শিকড় গঠন এবং ফুল ও ফল ধরার জন্য ফসফরাস গুরুত্বপূর্ণ। এটি শক্তি স্থানান্তরে সাহায্য করে।"
                                     : "Crucial for root development, flowering, and fruiting. Phosphorus helps in energy transfer within the plant."}
                             </p>
                         </CardContent>
@@ -447,8 +450,8 @@ export default function SoilFertility() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
-                                {language === "bn" 
-                                    ? "রোগ প্রতিরোধ ক্ষমতা বাড়ায় এবং পানির ভারসাম্য রক্ষা করে। পটাশিয়ামের অভাবে ফসলের গুণগত মান কমে যায়।" 
+                                {language === "bn"
+                                    ? "রোগ প্রতিরোধ ক্ষমতা বাড়ায় এবং পানির ভারসাম্য রক্ষা করে। পটাশিয়ামের অভাবে ফসলের গুণগত মান কমে যায়।"
                                     : "Improves disease resistance and water regulation. Potassium ensures high-quality grain and fruit production."}
                             </p>
                         </CardContent>
@@ -459,8 +462,8 @@ export default function SoilFertility() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
-                                {language === "bn" 
-                                    ? "মাটির অম্লতা বা ক্ষারত্ব নির্দেশ করে। সঠিক pH না থাকলে গাছ মাটি থেকে পুষ্টি গ্রহণ করতে পারে না।" 
+                                {language === "bn"
+                                    ? "মাটির অম্লতা বা ক্ষারত্ব নির্দেশ করে। সঠিক pH না থাকলে গাছ মাটি থেকে পুষ্টি গ্রহণ করতে পারে না।"
                                     : "Measures soil acidity or alkalinity. Nutrients are most available to plants when soil pH is between 6.0 and 7.5."}
                             </p>
                         </CardContent>

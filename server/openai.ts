@@ -139,7 +139,8 @@ async function executeWithFallback<T>(
         error?.message?.toLowerCase().includes('too many requests');
 
       if (isRateLimited) {
-        console.log(`[Groq Fallback] Rate limit hit on key ...${apiKey.slice(-6)}, attempt ${attempt + 1}/${maxRetries}`);
+        console.warn(`[Groq Fallback] Rate limit hit on key ...${apiKey.slice(-6)}, attempt ${attempt + 1}/${maxRetries}`);
+        console.warn(`[Groq Fallback] Error details:`, error.message || error);
         handleRateLimitError(apiKey);
 
         // If we have more keys to try, continue
@@ -159,8 +160,8 @@ async function executeWithFallback<T>(
 // Helper to get the model
 function getModel(type: "vision" | "text" = "text") {
   if (type === "vision") {
-    // Verified working vision model as of late Jan 2026
-    return "meta-llama/llama-4-scout-17b-16e-instruct";
+    // Verified working vision model as of Feb 2026
+    return "llama-3.2-90b-vision-preview";
   }
   return "llama-3.3-70b-versatile";
 }
