@@ -161,7 +161,7 @@ async function executeWithFallback<T>(
 function getModel(type: "vision" | "text" = "text") {
   if (type === "vision") {
     // Verified working vision model as of Feb 2026
-    return "llama-3.2-90b-vision-preview";
+    return "llama-3.2-11b-vision-preview";
   }
   return "llama-3.3-70b-versatile";
 }

@@ -229,6 +229,11 @@ function calculateIndex(data: SoilData): SoilData {
 // Helper to get location name using OpenStreetMap Nominatim
 async function getLocationName(lat: number, lng: number): Promise<string> {
     try {
+        if (typeof fetch === 'undefined') {
+            console.warn("Global 'fetch' not available. Skipping geocoding.");
+            return "Unknown Location";
+        }
+
         const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=12&addressdetails=1`;
         console.log(`Geocoding URL: ${url}`); // Debug Log
 
@@ -244,8 +249,6 @@ async function getLocationName(lat: number, lng: number): Promise<string> {
         }
 
         const data = await response.json();
-        console.log("Geocoding Raw Data:", JSON.stringify(data.address)); // Debug Log
-
         const addr = data.address || {};
 
         // Priority for "Upazila Only":

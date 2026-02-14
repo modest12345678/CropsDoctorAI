@@ -247,7 +247,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid request", errors: error.errors });
       }
       console.error("Fertilizer calculation error:", error);
-      res.status(500).json({ message: "Failed to calculate fertilizer recommendations" });
+      res.status(500).json({
+        message: "Failed to calculate fertilizer recommendations",
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
@@ -268,7 +271,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid request", errors: error.errors });
       }
       console.error("Pesticide calculation error:", error);
-      res.status(500).json({ message: "Failed to calculate pesticide recommendations" });
+      res.status(500).json({
+        message: "Failed to calculate pesticide recommendations",
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   });
 
@@ -344,10 +350,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(data);
     } catch (error: any) {
       console.error("Soil data request error:", error);
-      if (error.code === 'ERR_MODULE_NOT_FOUND' || error.message?.includes('Cannot find module')) {
-        return res.status(503).json({ message: "System update pending. Please restart the implementation server (npm run dev)." });
+
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+
+      if (error.code === 'ERR_MODULE_NOT_FOUND' || errorMessage.includes('Cannot find module')) {
+        return res.status(503).json({
+          message: "System update pending. Please restart the implementation server (npm run dev).",
+          details: errorMessage
+        });
       }
-      res.status(500).json({ message: error.message || "Failed to fetch soil data" });
+
+      res.status(500).json({
+        message: "Failed to fetch soil data",
+        details: errorMessage,
+        stack: process.env.NODE_ENV === 'development' ? errorStack : undefined
+      });
     }
   });
 
