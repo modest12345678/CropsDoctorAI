@@ -83,6 +83,7 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const detection: Detection = {
       ...insertDetection,
+      userIp: insertDetection.userIp ?? null,
       id,
       createdAt: new Date(),
     };
@@ -213,6 +214,7 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const history: FertilizerHistory = {
       ...insertData,
+      userIp: insertData.userIp ?? null,
       id,
       createdAt: new Date(),
     };
@@ -230,6 +232,7 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const history: SoilHistory = {
       ...insertData,
+      userIp: insertData.userIp ?? null,
       id,
       createdAt: new Date(),
     };

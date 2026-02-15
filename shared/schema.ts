@@ -5,6 +5,7 @@ import { z } from "zod";
 
 export const detections = pgTable("detections", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userIp: varchar("user_ip"),
   cropType: text("crop_type").notNull(),
   imageData: text("image_data").notNull(),
   diseaseName: text("disease_name").notNull(),
@@ -46,6 +47,7 @@ export const farmingStages = pgTable("farming_stages", {
 
 export const fertilizerHistory = pgTable("fertilizer_history", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userIp: varchar("user_ip"),
   crop: text("crop").notNull(),
   area: text("area").notNull(),
   unit: text("unit").notNull(),
@@ -55,6 +57,7 @@ export const fertilizerHistory = pgTable("fertilizer_history", {
 
 export const soilHistory = pgTable("soil_history", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userIp: varchar("user_ip"),
   location: text("location").notNull(),
   result: text("result").notNull(), // Stored as JSON string
   createdAt: timestamp("created_at").notNull().defaultNow(),

@@ -71,6 +71,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       // Return AI result immediately - don't block on DB
+      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const userIp = Array.isArray(ip) ? ip[0] : ip;
+
       res.json({
         id: crypto.randomUUID(),
         cropType: validatedRequest.cropType,
@@ -85,6 +88,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Save to DB in background (non-blocking)
       storage.createDetection({
+        userIp: userIp || null,
         cropType: validatedRequest.cropType,
         imageData: validatedRequest.imageData,
         diseaseName: analysis.diseaseName,
@@ -97,8 +101,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Track usage in background (non-blocking)
-      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-      const userIp = Array.isArray(ip) ? ip[0] : ip;
       if (userIp) {
         storage.incrementUserAnalysisCount(userIp).catch(err => {
           console.error("Non-critical: Failed to track usage:", err.message);
@@ -246,7 +248,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(recommendations);
 
       // Save to DB in background (non-blocking)
+      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const userIp = Array.isArray(ip) ? ip[0] : ip;
       storage.createFertilizerHistory({
+        userIp: userIp || null,
         crop: validated.cropType,
         area: String(validated.area),
         unit: validated.unit,
@@ -357,7 +362,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(data);
 
       // Save to history in background (non-blocking)
+      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+      const userIp = Array.isArray(ip) ? ip[0] : ip;
       storage.createSoilHistory({
+        userIp: userIp || null,
         location: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
         result: JSON.stringify(data),
       }).catch(err => {
