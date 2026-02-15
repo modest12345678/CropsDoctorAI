@@ -1,4 +1,3 @@
-import DetectionHistory from "@/components/DetectionHistory";
 import { SEO } from "@/components/SEO";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -120,9 +119,7 @@ export default function Home() {
       </div>
 
 
-      <div className="max-w-7xl mx-auto pb-8">
-        <DetectionHistory />
-      </div>
+
 
       <div className="max-w-7xl mx-auto pb-16 px-4">
         <h2 className="text-2xl font-bold mb-6 text-foreground/80">{t.smartFarmingTools}</h2>
