@@ -160,10 +160,11 @@ async function executeWithFallback<T>(
 // Helper to get the model
 function getModel(type: "vision" | "text" = "text") {
   if (type === "vision") {
-    // Verified working vision model as of Feb 2026
-    return "llama-3.2-11b-vision-preview";
+    // Llama 4 Scout replaces llama-3.2-11b-vision-preview (decommissioned Apr 2025)
+    return "meta-llama/llama-4-scout-17b-16e-instruct";
   }
-  return "llama-3.3-70b-versatile";
+  // Llama 4 Scout replaces llama-3.3-70b-versatile (decommissioned Apr 2025)
+  return "meta-llama/llama-4-scout-17b-16e-instruct";
 }
 
 export interface DiseaseAnalysis {
