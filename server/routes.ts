@@ -1,5 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import crypto from "crypto";
 import { storage } from "./storage.js";
 import { analyzeCropDisease, type CropType } from "./openai.js";
 import { insertDetectionSchema, insertTrainingDataSchema, insertFarmingCycleSchema, insertFarmingStageSchema } from "../shared/schema.js";
@@ -69,43 +70,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
         validatedRequest.language as "en" | "bn"
       );
 
-      // Store detection result
-      const detection = await storage.createDetection({
+      // Return AI result immediately - don't block on DB
+      res.json({
+        id: crypto.randomUUID(),
         cropType: validatedRequest.cropType,
         imageData: validatedRequest.imageData,
         diseaseName: analysis.diseaseName,
         confidence: analysis.confidence,
         description: analysis.description,
         symptoms: analysis.symptoms,
-        treatment: JSON.stringify(analysis.treatment), // Store as JSON string
+        treatment: analysis.treatment,
+        createdAt: new Date(),
       });
 
-      // Track usage
+      // Save to DB in background (non-blocking)
+      storage.createDetection({
+        cropType: validatedRequest.cropType,
+        imageData: validatedRequest.imageData,
+        diseaseName: analysis.diseaseName,
+        confidence: analysis.confidence,
+        description: analysis.description,
+        symptoms: analysis.symptoms,
+        treatment: JSON.stringify(analysis.treatment),
+      }).catch(err => {
+        console.error("Non-critical: Failed to save detection:", err.message);
+      });
+
+      // Track usage in background (non-blocking)
       const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
       const userIp = Array.isArray(ip) ? ip[0] : ip;
       if (userIp) {
-        await storage.incrementUserAnalysisCount(userIp);
+        storage.incrementUserAnalysisCount(userIp).catch(err => {
+          console.error("Non-critical: Failed to track usage:", err.message);
+        });
       }
-
-      // Return with treatment as array for frontend
-      res.json({
-        ...detection,
-        treatment: analysis.treatment
-      });
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid request data", errors: error.errors });
       }
-      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-      const userIp = Array.isArray(ip) ? ip[0] : ip;
-
       console.error("Detection error:", error);
-      await storage.logError({
+      storage.logError({
         message: error instanceof Error ? error.message : "Unknown detection error",
         stack: error instanceof Error ? error.stack : undefined,
-        ip: userIp,
         context: "POST /api/detect"
-      });
+      }).catch(() => { });
 
       res.status(500).json({
         message: error instanceof Error ? error.message : "Failed to analyze image"
@@ -234,14 +242,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         validated.language
       );
 
-      await storage.createFertilizerHistory({
+      // Return AI result immediately - don't block on DB
+      res.json(recommendations);
+
+      // Save to DB in background (non-blocking)
+      storage.createFertilizerHistory({
         crop: validated.cropType,
         area: String(validated.area),
         unit: validated.unit,
         result: JSON.stringify(recommendations),
+      }).catch(err => {
+        console.error("Non-critical: Failed to save fertilizer history:", err.message);
       });
-
-      res.json(recommendations);
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid request", errors: error.errors });
@@ -341,13 +353,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { getSoilData } = await import("./services/soilService.js");
       const data = await getSoilData(lat, lng);
 
-      // Save to history
-      await storage.createSoilHistory({
+      // Return result immediately - don't block on DB
+      res.json(data);
+
+      // Save to history in background (non-blocking)
+      storage.createSoilHistory({
         location: `${lat.toFixed(6)}, ${lng.toFixed(6)}`,
         result: JSON.stringify(data),
+      }).catch(err => {
+        console.error("Non-critical: Failed to save soil history:", err.message);
       });
-
-      res.json(data);
     } catch (error: any) {
       console.error("Soil data request error:", error);
 
